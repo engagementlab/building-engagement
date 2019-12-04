@@ -272,7 +272,6 @@ export class ProjectComponent implements OnInit {
       // If success, redirect to projects
       if(response.deleted)
         this._router.navigateByUrl('/projects');
-        
 
     });
 
@@ -335,8 +334,6 @@ export class ProjectComponent implements OnInit {
           // Line only for records past first
           if(i > 0)
             doc.line(10, yOffset, width-20, yOffset, 'FD');
-
-            console.log(yOffset, descHeight, prevNoteHeight)
 
           doc.setFontSize(14);
           doc.setDrawColor(0);

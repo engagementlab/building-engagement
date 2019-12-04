@@ -44,5 +44,8 @@ router.get('/api/project/delete/:userId/:projectId', routeIncludes, routes.api.p
 
 router.post('/api/progress/create', routeIncludes, routes.api.progress.create);
 
+router.get('/api/admin/get/all', routeIncludes, routes.api.admin.all);
+router.get('/api/admin/get/project/:projectId', routeIncludes, routes.api.admin.project);
+
 
 module.exports = router;

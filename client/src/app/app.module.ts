@@ -5,12 +5,16 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+
+import { AdminComponent } from './admin/admin.component';
 import { HomeComponent } from './home/home.component';
 import { NavComponent } from './nav/nav.component';
 import { CallbackComponent } from './utils/callback/callback.component';
 import { ProfileComponent } from './profile/profile.component';
 import { MenuComponent } from './menu/menu.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { StudiesComponent } from './studies/studies.component';
 import { TrackComponent } from './projects/track/track.component';
 
 import { DataService } from './utils/data.service';
@@ -29,8 +33,6 @@ import { ActivityComponent } from './activity/activity.component';
 import { SanitizeHtmlPipe } from './utils/sanitize-html.pipe';
 
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { StudiesComponent } from './studies/studies.component';
-import { NotFoundComponent } from './not-found/not-found.component';
 
 export const cloudinary = {
   Cloudinary: CloudinaryCore
@@ -54,7 +56,8 @@ export const config: CloudinaryConfiguration = cloudinaryConfiguration;
     ActivityComponent,
     SanitizeHtmlPipe,
     StudiesComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AdminComponent
   ],
   imports: [
     BrowserModule,

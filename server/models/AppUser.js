@@ -22,6 +22,9 @@ var appUserSchema = new Schema({
 	},
 	imgUrl: {
 		type: String
+	},
+	lastLogin: {
+		type: Date
 	}
 });
 

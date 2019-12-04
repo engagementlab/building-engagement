@@ -91,9 +91,9 @@ const SendEmail = async function () {
             return;
 
         const subject = (process.env.NODE_ENV !== 'production' ? '(TESTING) ' : '') + 'Meetr reminder for your project "%recipient.project%"',
-              body = '<img src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,w_150/v1565109667/engagement-journalism/img/meetr_logo_raster.png" alt="Meetr logo" /><br />' +
+              body = '<img src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,w_150/v1565109667/engagement-journalism/img/meetr_logo_raster.png" alt="Meetr logo" /><br /><br />' +
                     'Hi %recipient.name%,' +
-                    '<p>How’s your engaged journalism project going? We want to keep helping you measure its value. Please remember to track the progress of your project, %recipient.project%” on Meetr.<br />' +
+                    '<p>How’s your engaged journalism project going? We want to keep helping you measure its value. Please remember to track the progress of your project, "%recipient.project%” on Meetr.<br /><br />' +
                     'Talk it out and track your progress by visiting <a href="https://meetr.in">Meetr</a>.</p>' +
                     'The Meetr Team';
         
