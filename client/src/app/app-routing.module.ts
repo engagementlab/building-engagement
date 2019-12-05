@@ -9,6 +9,8 @@ import { TrackComponent } from './projects/track/track.component';
 import { ActivityComponent } from './activity/activity.component';
 import { StudiesComponent } from './studies/studies.component';
 
+import { AdminComponent } from './admin/admin.component';
+
 import { NotFoundComponent } from './not-found/not-found.component';
 
 import { AuthGuard } from './utils/auth.guard';
@@ -22,6 +24,10 @@ const routes: Routes = [
   {
     path: 'about',
     component: AboutComponent
+  },
+  {
+    path: 'admin',
+    component: AdminComponent
   },
   {
     path: 'callback',
