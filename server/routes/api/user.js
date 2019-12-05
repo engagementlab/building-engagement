@@ -14,6 +14,9 @@ let createUser = async (req, res) => {
 
     let newUser = new AppUser({ name: req.body.name, email: req.body.email, sub: req.body.sub, imgUrl: req.body.img});
  
+    // Update last login date
+    newUser.lastLogin = new Date(Date.now()).toISOString();
+    
     try {
         let saveRes = await newUser.save();
         res.json(saveRes);
@@ -35,8 +38,14 @@ exports.exists = async (req, res) => {
 
         if(!userRes || (userRes && userRes.length < 1))
             createUser(req, res);
-        else
-            res.status(200).send(userRes);
+        else {
+          
+          // Update last login date
+          userRes.lastLogin = new Date(Date.now()).toISOString();
+          await userRes.save();
+
+          res.status(200).send(userRes);
+        }
     }
     catch(e) {
         console.error(e);
@@ -82,8 +91,6 @@ exports.find = async (req, res) => {
         const users = JSON.parse(body),
               _l = require('lodash');
 
-        // console.log(body)
-
         // Find if any associated user signed up via social
         let isSocial = _l.some(users, (user) => {
             return user.user_id.indexOf('facebook') > -1 || user.user_id.indexOf('google') > -1
@@ -95,10 +102,3 @@ exports.find = async (req, res) => {
     });
 
 };
-
-/*
- * Create data
- */
-exports.create = (req, res) => {
-    createUser(req, res);
-}

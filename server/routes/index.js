@@ -33,7 +33,6 @@ router.all('/*', function(req, res, next) {
 
 router.get('/api/data/get/:type', routeIncludes, routes.api.data.get);
 
-router.post('/api/user/create', routeIncludes, routes.api.user.create);
 router.post('/api/user/exists', routeIncludes, routes.api.user.exists);
 router.post('/api/user/find', routeIncludes, routes.api.user.find);
 
