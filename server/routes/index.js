@@ -35,6 +35,7 @@ router.get('/api/data/get/:type', routeIncludes, routes.api.data.get);
 
 router.post('/api/user/exists', routeIncludes, routes.api.user.exists);
 router.post('/api/user/find', routeIncludes, routes.api.user.find);
+router.get('/api/user/admin/:email', routeIncludes, routes.api.user.admin);
 
 router.post('/api/project/create', routeIncludes, routes.api.project.create);
 router.get('/api/project/get/:userId', routeIncludes, routes.api.project.getAll);

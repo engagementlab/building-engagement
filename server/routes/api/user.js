@@ -8,7 +8,8 @@
  *
  * ==========
  */
-const AppUser = require('../../models/AppUser');
+const AppUser = require('../../models/AppUser'),
+      KeystoneUser = require('keystone').list('User').model;
 
 let createUser = async (req, res) => { 
 
@@ -102,3 +103,23 @@ exports.find = async (req, res) => {
     });
 
 };
+
+exports.admin = async (req, res) => {  
+
+  try {
+
+    const isAdminQuery = KeystoneUser.find({ email: req.params.email })
+    const isAdminRes = await isAdminQuery.exec();
+
+    // Send bool if keystone user 
+    res.status(200).send(isAdminRes.length > 0);
+  
+  }
+  catch(e) {
+
+    console.error(e);
+    res.status(500).send(e);
+
+  }
+
+}
