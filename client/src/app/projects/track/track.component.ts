@@ -15,7 +15,7 @@ import * as _ from 'underscore';
 })
 export class TrackComponent implements OnInit {
   
-  public projects: any[];
+  public prompts: string[];
   public hasProjects: boolean;
   public formError: boolean;
 
@@ -30,7 +30,9 @@ export class TrackComponent implements OnInit {
   ngOnInit() {
 
     let radioGroups = {};
-    SurveyPrompts.prompts.forEach((p, i) => radioGroups[i + ''] = [null, [Validators.required]]);
+    
+    this.prompts = SurveyPrompts.prompts;
+    this.prompts.forEach((p, i) => radioGroups[i + ''] = [null, [Validators.required]]);
     this.responseForm = this._formBuilder.group(radioGroups);
    
     this._route.params.subscribe(params => {

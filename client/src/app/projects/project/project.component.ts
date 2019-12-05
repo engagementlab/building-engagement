@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { DataService } from '../../utils/data.service';
 import { ProjectGrid } from '../../project-grid';
+import { SurveyPrompts } from '../../survey-prompts';
 
 import { TweenLite, TweenMax } from 'gsap';
 
@@ -119,12 +120,6 @@ export class ProjectComponent implements OnInit {
 
   public exportPdf() {
 
-    let canvasImg = this.canvasElement.nativeElement.toDataURL();
-    let doc = new jsPDF();
-    let dt = dateformat(new Date(), 'mm-d-yy_h:MM:sstt');
-    let circleColors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
-    let circleColorIndex = 0;
-
     // Fonts encoding for PDF
     this._http.get('assets/spectral-base-64', {
       responseType: 'text'
@@ -135,6 +130,16 @@ export class ProjectComponent implements OnInit {
         responseType: 'text'
       }).subscribe(data => {
         this.robotoFont = data;
+
+        this._http.get('assets/logo-base-64', {
+          responseType: 'text'
+        }).subscribe(logoData => {
+
+        let canvasImg = this.canvasElement.nativeElement.toDataURL();
+        let doc = new jsPDF();
+        let dt = dateformat(new Date(), 'mm-d-yy_h:MM:sstt');
+        let circleColors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
+        let circleColorIndex = 0;
 
         // Add our fonts in base64 encoding
         doc.addFileToVFS('Spectral-Bold.ttf', this.spectralFont);
@@ -147,28 +152,56 @@ export class ProjectComponent implements OnInit {
         let width = doc.internal.pageSize.getWidth();
         let height = doc.internal.pageSize.getHeight();
 
+        doc.addImage(logoData, 'PNG', 10, 20, 50, 10);
+
         // Cleanup description so it doesn't overrun
         let descArr = doc.splitTextToSize(this.project.description.replace(/(\r\n|\n|\r)/gm, ' '), width - 60);
-        let descHeight = 0;
+
+        // Offset begins at height of name + description and offsext
+        let globalYOffset = 85;
         _.each(descArr, (d) => {
-          descHeight += doc.getTextDimensions(d).h;
+          globalYOffset += doc.getTextDimensions(d).h;
         });
 
         doc.setFontSize(40)
         doc.setFont('Spectral-Bold');
-        doc.text(10, 20, this.project.name);
+        doc.text(10, 50, this.project.name);
 
         doc.setFontSize(20);
         doc.setFont('Roboto-Regular');
-        doc.text(10, 40, descArr);
+        doc.text(10, 70, descArr);
+
+        // Survey prompt header
+        doc.setFontSize(15);
+        doc.text(10, globalYOffset, 'Survey Prompts:');
+        globalYOffset += 10;
+
+        // Draw all survey prompts
+        _.each(SurveyPrompts.prompts, (prompt, i) => {
+          
+          let promptArr = doc.splitTextToSize((i+1) + '. ' + prompt.replace(/(\r\n|\n|\r)/gm, ' '), width - 40);
+          doc.text(10, globalYOffset, promptArr);
+
+          // Measure prompt height
+          _.each(promptArr, (d: any) => {
+            globalYOffset += doc.getTextDimensions(d).h;
+          });
+          globalYOffset += 5;
+
+
+        });    
+
+        // Add page and reset global offset
+        doc.addPage();
+        globalYOffset = 0;
 
         // Draw all progress entries
         let prevNoteHeight = 0;
         let newPage = false;
-        this.progress.forEach((p, i) => {
+        _.each(this.progress, (p: any, i: number) => {
 
           // Offset on y is project description plus cumulative previous note heights, unless new pg just added
-          let yOffset = newPage ? 20 : (descHeight+prevNoteHeight) + 50;
+          let yOffset = newPage ? 20 : (globalYOffset+prevNoteHeight) + 50;
           if(newPage) newPage = false;
 
           // Line only for records past first
@@ -199,6 +232,7 @@ export class ProjectComponent implements OnInit {
 
           // Add note if defined
           if(p.note) {
+
             // Note cannot exceed specified width
             let noteArr = doc.splitTextToSize(p.note, 75);
 
@@ -206,16 +240,17 @@ export class ProjectComponent implements OnInit {
             doc.text(120, yOffset + 12, noteArr);
 
             // Measure note height
-            _.each(noteArr, (d) => {
+            _.each(noteArr, (d: any) => {
               prevNoteHeight += doc.getTextDimensions(d).h;
             });
+
           }
 
           // If approaching height of page, add a page and reset cumulative height
           if((yOffset + prevNoteHeight) > (height-50)) {
             doc.addPage();
             newPage = true;
-            descHeight = 0;
+            globalYOffset = 0;
             prevNoteHeight = 0;
           }
 
@@ -227,9 +262,11 @@ export class ProjectComponent implements OnInit {
         doc.addPage();
 
         // Add img under description
-        doc.addImage(canvasImg, 'PNG', 0, 50 + descHeight, width, width);
+        doc.addImage(canvasImg, 'PNG', 0, 50 + globalYOffset, width, width);
 
         doc.save('results_' + this.project.slug + '_' + dt + '.pdf');
+
+      });
 
       });
 
