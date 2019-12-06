@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Subject, Observable, throwError, BehaviorSubject } from 'rxjs';
+import { Subject, Observable, throwError, BehaviorSubject, ReplaySubject } from 'rxjs';
 
 import { environment } from '../../environments/environment';
 
@@ -21,7 +21,7 @@ export class DataService {
   public currentUrl: string;
 
   public userId: BehaviorSubject<string> = new BehaviorSubject<string>(null);
-  public isAdmin: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public isAdmin: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   public currentProjectId: string;
 
   private baseUrl: string;

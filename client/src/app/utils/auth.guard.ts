@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate 
+export class AuthGuard implements CanActivate
 {
   constructor(private authService: AuthService, private router: Router) {}
 
@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Promise<boolean | UrlTree> {
-    
+
     let pending = true;
     let isAuthenticated = this.authService.isAuthenticated.getValue();
 
@@ -21,18 +21,18 @@ export class AuthGuard implements CanActivate
 
       pending = val;
       isAuthenticated = this.authService.isAuthenticated.getValue();
-      
-      if(!isAuthenticated && !pending) 
+
+      if(!isAuthenticated && !pending)
         this.authService.showLoginPrompt();
 
     });
 
     if (isAuthenticated || pending)
       return true;
-    
+
     this.authService.showLoginPrompt();
 
     return false;
-    
+
   }
 }
