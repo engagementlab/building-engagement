@@ -81,7 +81,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.showModal(false);
       }
     });
-    
+
     this.authInit = true;
 
   }
@@ -113,6 +113,10 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this._dataSvc.userId.next(response._id);
     });
 
+    this._dataSvc.getDataForUrl('/api/user/admin/' + profile.sub).subscribe((response: any) => {
+      this._dataSvc.isAdmin.next(response);
+    });
+
   }
 
   showModal(allowClose = true) {
@@ -126,16 +130,16 @@ export class ProfileComponent implements OnInit, OnDestroy {
 
     // Turn off scrolling
     disableBodyScroll(document.getElementById('modal'));
-    
+
   }
-  
+
   closeModal() {
-    
+
     this.hideCloseButton = false;
-    
+
     document.getElementById('wrapper-profile').style.display = 'none';
     document.getElementById('nav').classList.remove('open');
-    
+
     // Turn scrolling back on
     enableBodyScroll(document.getElementById('modal'));
 
@@ -237,7 +241,7 @@ export class ProfileComponent implements OnInit, OnDestroy {
       this.errorForgot = true;
       return;
     }
-    
+
     let data = {
       email: this.siForm['email'].value
     };
@@ -249,8 +253,8 @@ export class ProfileComponent implements OnInit, OnDestroy {
         this.showForgot = false;
         document.getElementById('forgot-msg').innerText = 'You signed up via Google or Facebook and cannot reset your password here.';
         return;
-      }      
-      
+      }
+
       // Does user exist?
       if(!data.exists) {
         this.showForgot = false;
