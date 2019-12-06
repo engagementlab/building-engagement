@@ -2,28 +2,38 @@
   <div class="container">
     <h2 class="subtitle">Projects</h2>
 
-    <div class="columns">
-      <div class="column is-one-third" *ngFor="let project of content">
-        <div class="card">
+    <div class="columns is-multiline" *ngFor="let item of users">
+      <div class="column is-one-half" *ngFor="let project of item.projects">
+          <div class="card" >
 
-          <header class="card-header">
-            <p class="card-header-title">{{ project.name }}</p>
-          </header>
+            <!-- <header class="card-header">
+              <p class="card-header-title">{{ project.name }}</p>
+            </header> -->
 
-          <div class="card-content">
-            <div class="content">
-              {{ project.description }}
-              <!--
-                <br />
-                <time datetime={{/* something here */}}> {{ /* same data */}} </time>
-              -->
+            <div class="card-content">
+              <div class="media">
+                <div class="media-content">
+                  <h2 class="title no-whitespace">{{ project.name }}</h2>
+                  <h3 class="subtitle no-whitespace">{{ item.user.name }}</h3>
+                </div>
+              </div>
+
+              <hr class="no-whitespace" />
+
+              <div class="content">
+                {{ project.description }}
+                <!--
+                  <br />
+                  <time datetime={{/* something here */}}> {{ /* same data */}} </time>
+                -->
+              </div>
             </div>
-          </div>
 
-          <footer class="card-footer">
-            <a class="card-footer-item" [attr.href]="project.url">{{ project.url }}</a>
-          </footer>
-        </div>
+            <!-- <footer class="card-footer"> -->
+              <!-- <a class="card-footer-item" [attr.href]="project.url">{{ project.url }}</a> -->
+              <!-- <span class="card-footer-item">{{ item.user.name }}</span> -->
+            <!-- </footer> -->
+          </div>
     </div>
   </div>
 

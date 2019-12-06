@@ -14,7 +14,7 @@ import { environment } from '../../environments/environment';
 
 export class AdminComponent implements OnInit {
 
-  public content: any;
+  public users: any;
   public hasContent: boolean;
 
   constructor(private _dataSvc: DataService,
@@ -26,12 +26,12 @@ export class AdminComponent implements OnInit {
       next: (isAdmin) => this.checkAdmin(isAdmin)
     })
 
-    this._dataSvc.getDataForUrl('/api/data/get/admin').subscribe((response: any) => {
+    this._dataSvc.getDataForUrl('/api/admin/get/users').subscribe((response: any) => {
 
-      this.content = response[1];
+      this.users = response;
       this.hasContent = true;
 
-      console.log(this.content);
+      console.log("Users: " + this.users);
     });
 
   }
