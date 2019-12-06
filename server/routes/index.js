@@ -16,14 +16,14 @@ var routes = {
 let routeIncludes = [keystone.middleware.api, keystone.middleware.cors];
 let origin = process.env.ALLOWED_ORIGIN ? process.env.ALLOWED_ORIGIN : "http://localhost:4200";
 
-// Setup Route Bindings 
+// Setup Route Bindings
 // CORS
 router.all('/*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", origin);
     res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, HEAD, PUT');
     res.header('Access-Control-Expose-Headers', 'Content-Length');
     res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method");
-    
+
     if(req.method === 'OPTIONS')
         res.sendStatus(200);
     else
@@ -44,7 +44,7 @@ router.get('/api/project/delete/:userId/:projectId', routeIncludes, routes.api.p
 
 router.post('/api/progress/create', routeIncludes, routes.api.progress.create);
 
-router.get('/api/admin/get/all', routeIncludes, routes.api.admin.all);
+router.get('/api/admin/get/users', routeIncludes, routes.api.admin.users);
 router.get('/api/admin/get/project/:projectId', routeIncludes, routes.api.admin.project);
 
 

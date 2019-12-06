@@ -15,14 +15,14 @@ const AppUser = require('../../models/AppUser'),
 /*
  * Get all users and their projects
  */
-exports.all = async (req, res) => { 
+exports.users = async (req, res) => {
 
     let usersFind = AppUser.find({}, 'name email lastLogin');
- 
+
     try {
         let userRes = await usersFind.exec();
         await Promise.all(userRes.map(async (user) => {
-        
+
             let userProjects = Project.find({user: user._id}, 'name description slug');
             let p = await userProjects.exec();
 
@@ -42,11 +42,11 @@ exports.all = async (req, res) => {
 /*
  * Find project by its mongo ID
  */
-exports.project = async (req, res) => { 
+exports.project = async (req, res) => {
 
 
     let getProject = Project.findOne({_id: req.params.projectId}, 'name description _id');
-    
+
     try {
         let getProjectRes = await getProject.exec();
         let projProgress = Progress.find({project: getProjectRes._id}, 'sumX sumY note date -_id').sort({date: -1});
