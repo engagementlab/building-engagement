@@ -59,10 +59,58 @@ exports.exists = async (req, res) => {
  */
 exports.find = async (req, res) => { 
 
-    // Get management API token
-    var request = require("request");
+  // Get Auth0 management API token
+  const request = require("request"),
+  options = {
+    method: 'POST',
+    url: 'https://' + process.env.MEETR_AUTH0_DOMAIN + '/oauth/token',
+    headers: {'content-type': 'application/x-www-form-urlencoded'},
+    form: {
+      grant_type: 'client_credentials',
+      client_id: process.env.MEETR_AUTH0_CLIENT_ID,
+      client_secret: process.env.MEETR_AUTH0_CLIENT_SECRET,
+      audience: 'https://' + process.env.MEETR_AUTH0_DOMAIN + '/api/v2/'
+    }
+  };
 
-    var options = {
+  // Now check if input email is associated w/ any user
+  request(options, function (error, response, body) {
+    if (error) throw new Error(error);
+  
+    let accessToken = JSON.parse(body)['access_token'];
+    let options = {
+    method: 'GET',
+      url: 'https://' + process.env.MEETR_AUTH0_DOMAIN + '/api/v2/users-by-email',
+      qs: {email: req.body.email},
+      headers: {authorization: 'Bearer ' + accessToken}
+    };
+    
+    request(options, function (error, response, body) {
+      if (error) res.status(500).json({error});
+          
+      const users = JSON.parse(body),
+            _l = require('lodash');
+
+      // Find if any associated user signed up via social
+      let isSocial = _l.some(users, (user) => {
+          return user.user_id.indexOf('facebook') > -1 || user.user_id.indexOf('google') > -1
+      });
+    
+      // User is found if response not '[]' (length > 1)
+      res.json({social: isSocial, exists: users.length > 1});
+    });
+  });
+
+};
+
+/*
+ *
+ */
+exports.admin = async (req, res) => { 
+
+    // Get Auth0 management API token
+    const request = require("request"),
+    options = {
       method: 'POST',
       url: 'https://' + process.env.MEETR_AUTH0_DOMAIN + '/oauth/token',
       headers: {'content-type': 'application/x-www-form-urlencoded'},
@@ -74,52 +122,27 @@ exports.find = async (req, res) => {
       }
     };
 
-    // Now check if input email is associated w/ any user
+    // Now check if input user has 'Admin' role on Auth0 
     request(options, function (error, response, body) {
       if (error) throw new Error(error);
     
       let accessToken = JSON.parse(body)['access_token'];
       let options = {
       method: 'GET',
-        url: 'https://' + process.env.MEETR_AUTH0_DOMAIN + '/api/v2/users-by-email',
-        qs: {email: req.body.email},
+        url: 'https://' + process.env.MEETR_AUTH0_DOMAIN + '/api/v2/users/' + req.params.id + '/roles',
         headers: {authorization: 'Bearer ' + accessToken}
       };
       
       request(options, function (error, response, body) {
         if (error) res.status(500).json({error});
             
-        const users = JSON.parse(body),
-              _l = require('lodash');
-
-        // Find if any associated user signed up via social
-        let isSocial = _l.some(users, (user) => {
-            return user.user_id.indexOf('facebook') > -1 || user.user_id.indexOf('google') > -1
-        });
+        let roles = JSON.parse(body);
+        // Find if Admins role returned
+        let isAdmin = roles[0].name === 'Admins';
       
         // User is found if response not '[]' (length > 1)
-        res.json({social: isSocial, exists: users.length > 1});
+        res.send(isAdmin);
       });
     });
 
 };
-
-exports.admin = async (req, res) => {  
-
-  try {
-
-    const isAdminQuery = KeystoneUser.find({ email: req.params.email })
-    const isAdminRes = await isAdminQuery.exec();
-
-    // Send bool if keystone user 
-    res.status(200).send(isAdminRes.length > 0);
-  
-  }
-  catch(e) {
-
-    console.error(e);
-    res.status(500).send(e);
-
-  }
-
-}
