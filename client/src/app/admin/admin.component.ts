@@ -28,9 +28,10 @@ export class AdminComponent implements OnInit {
 
     this._dataSvc.getDataForUrl('/api/data/get/admin').subscribe((response: any) => {
 
-      this.content = response;
+      this.content = response[1];
       this.hasContent = true;
 
+      console.log(this.content);
     });
 
   }

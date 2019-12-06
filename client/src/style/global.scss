@@ -4,6 +4,9 @@ $tablet: 768px;
 @import "~bulma/sass/grid/columns";
 @import "~bulma/sass/elements/container";
 
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/components/card.sass";
+
 @import '_variables';
 
 @import '~ngx-owl-carousel-o/lib/styles/scss/owl.carousel';

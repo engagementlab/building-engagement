@@ -1,8 +1,34 @@
 <section id="projects" class="section">
   <div class="container">
     <h2 class="subtitle">Projects</h2>
-    <!-- TODO: Implement ngFor + Bulma tiles to list projects -->
+
+    <div class="columns">
+      <div class="column is-one-third" *ngFor="let project of content">
+        <div class="card">
+
+          <header class="card-header">
+            <p class="card-header-title">{{ project.name }}</p>
+          </header>
+
+          <div class="card-content">
+            <div class="content">
+              {{ project.description }}
+              <!--
+                <br />
+                <time datetime={{/* something here */}}> {{ /* same data */}} </time>
+              -->
+            </div>
+          </div>
+
+          <footer class="card-footer">
+            <a class="card-footer-item" [attr.href]="project.url">{{ project.url }}</a>
+          </footer>
+        </div>
+    </div>
   </div>
+
+  </div>
+
 </section>
 
 <section class="section" id="producers">
