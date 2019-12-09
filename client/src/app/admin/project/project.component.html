@@ -1,0 +1,53 @@
+<section class="container desktop" *ngIf="hasContent">
+        
+    <h2>
+        {{project.name}}
+    </h2>
+    <h3>
+        by {{project.user.name}}
+    </h3>
+    <p>{{project.description}}</p>
+  <div class="columns column is-full is-mobile is-multiline" *ngIf="progress && progress.length > 0">
+
+    <div id="all" class="column is-full-mobile">
+      <hr id="all-hr1" />
+      <div class="columns is-mobile" *ngFor="let entry of progress; let i = index;">
+        <div class="column is-1">
+          <span class="num mono">
+            {{progress.length - i}}
+          </span>
+        </div>
+        <div class="column is-2">
+          {{entry.date | date: 'MM/dd/yyyy'}}
+        </div>
+        <div class="column is-1">
+          {{entry.sumX/2}}, {{entry.sumY/2}}
+        </div>
+        <div class="column note">
+          {{entry.note}}
+        </div>
+      </div>
+      <hr id="all-hr2" />
+    </div>
+  </div>
+
+  <!-- Progress canvas -->
+  <div class="column is-full" *ngIf="progress && progress.length > 0">
+
+    <div class="center">
+      <canvas #canvasElement id="canvas" height="680" width="680"></canvas>
+    </div>
+
+    <button (click)="export()">
+        Export Graph
+    </button>
+
+  </div>
+
+  <div *ngIf="progress && progress.length === 0">
+    <h1>
+        [No project progress found]
+    </h1>
+  </div>
+
+</section>

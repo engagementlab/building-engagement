@@ -45,7 +45,7 @@ exports.users = async (req, res) => {
 exports.project = async (req, res) => {
 
 
-    let getProject = Project.findOne({_id: req.params.projectId}, 'name description _id');
+    let getProject = Project.findOne({_id: req.params.projectId}, 'name description user _id').populate('user');
 
     try {
         let getProjectRes = await getProject.exec();

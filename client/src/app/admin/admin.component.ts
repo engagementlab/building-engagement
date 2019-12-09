@@ -14,41 +14,57 @@ import { environment } from '../../environments/environment';
 
 export class AdminComponent implements OnInit {
 
+  public allowAccess: boolean;
+  public isLoading: boolean = true;
   public users: any;
   public hasContent: boolean;
 
+  public currentProjects: any[];
+
   constructor(private _dataSvc: DataService,
-    private router: Router) { }
+  private router: Router) { }
 
   ngOnInit() {
 
     this._dataSvc.isAdmin.subscribe({
       next: (isAdmin) => this.checkAdmin(isAdmin)
-    })
-
-    this._dataSvc.getDataForUrl('/api/admin/get/users').subscribe((response: any) => {
-
-      this.users = response;
-      this.hasContent = true;
-
-      console.log("Users: " + this.users);
     });
 
   }
 
   checkAdmin(isAdmin: boolean) {
-    // TODO: Implement loading spinner over content since isAdmin.subscribe()
-    //       takes a few seconds to return a value.
-
+    
+    this.isLoading = false;
+    
     if (!isAdmin) {
-      if (environment.production) {
-        this.router.navigate(['/'])
-      } else {
-        console.log('Skipped redirect to / in development.')
-      }
+      if (!environment.production)
+        this.allowAccess = true; 
     } else {
-      console.log('You are an admin.')
+      this.allowAccess = true;
+
+      // Get data
+      this._dataSvc.getDataForUrl('/api/admin/get/users').subscribe((response: any) => {
+
+        this.users = response;
+        this.hasContent = true;
+
+        console.log("Users: " + this.users);
+      });
     }
+
+  }
+
+  viewProjects(projects: any[]) {
+    
+    this.currentProjects = projects;
+    document.getElementById('projects-modal').style.display = 'flex';
+
+  }
+
+  closeProjects() {
+
+    document.getElementById('projects-modal').style.display = 'none';
+
   }
 
 }

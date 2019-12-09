@@ -10,6 +10,7 @@ import { ActivityComponent } from './activity/activity.component';
 import { StudiesComponent } from './studies/studies.component';
 
 import { AdminComponent } from './admin/admin.component';
+import { AdminProjectComponent } from './admin/project/project.component';
 
 import { NotFoundComponent } from './not-found/not-found.component';
 
@@ -27,7 +28,13 @@ const routes: Routes = [
   },
   {
     path: 'admin',
-    component: AdminComponent
+    component: AdminComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'admin/:projectId',
+    component: AdminProjectComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'callback',

@@ -1,0 +1,48 @@
+@import '~src/style/_variables';
+
+#all {
+
+    .columns {
+  
+      &:nth-of-type(4n+1) .num {
+        background-color: $camo-green;
+      }
+  
+      &:nth-of-type(4n+2) .num {
+        background-color: $blueberry;
+      }
+  
+      &:nth-of-type(4n+3) .num {
+        background-color: $coral;
+      }
+  
+      &:nth-of-type(4n+4) .num {
+        background-color: $pale-salmon;
+      }
+  
+      .num {
+        display: block;
+        border-radius: 50px;
+  
+        width: 20px;
+        height: 20px;
+  
+        color: white;
+        text-align: center;
+      }
+  
+      .note {
+  
+        font-family: Roboto;
+        @include pxtoem(12, 18);
+        font-style: italic;
+        line-height: 1.5;
+        color: $brown-grey;
+      }
+    }
+  
+    hr {
+      border-bottom: 1px solid #ccc;
+    }
+  
+  }
