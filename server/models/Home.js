@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Engagement Journalism API server
+ * Meetr API server
  * 
  * Home page Model
  * @module home

@@ -22,6 +22,7 @@ export class ProjectComponent implements OnInit {
 
   public project: any;
   public projectId: string;
+  public projectDbId: string;
   public progress: any[];
   public hasContent: boolean;
   public noProgress: boolean;
@@ -81,6 +82,8 @@ export class ProjectComponent implements OnInit {
 
         this.project = response.project;
         this.progress = response.progress;
+        this.projectDbId = response.projectId;
+
         this.hasContent = true;
 
         this.noProgress = this.progress && this.progress.length === 0
@@ -120,157 +123,217 @@ export class ProjectComponent implements OnInit {
 
   public exportPdf() {
 
-    // Fonts encoding for PDF
-    this._http.get('assets/spectral-base-64', {
-      responseType: 'text'
-    }).subscribe(data => {
-      this.spectralFont = data
+    // Get pdf pre-filled txt and all of this projects progress from API
+    this._dataSvc.getDataForUrl('/api/project/pdf/'+ this.projectDbId).subscribe((response: any) => {
 
-      this._http.get('assets/roboto-base-64', {
+      let intro = response.text.intro,
+          explanation = response.text.explanation,
+          responses = response.responses;
+
+      // Fonts encoding for PDF
+      this._http.get('assets/spectral-base-64', {
         responseType: 'text'
       }).subscribe(data => {
-        this.robotoFont = data;
+        this.spectralFont = data
 
-        this._http.get('assets/logo-base-64', {
+        this._http.get('assets/roboto-base-64', {
           responseType: 'text'
-        }).subscribe(logoData => {
+        }).subscribe(data => {
+          this.robotoFont = data;
 
-        let canvasImg = this.canvasElement.nativeElement.toDataURL();
-        let doc = new jsPDF();
-        let dt = dateformat(new Date(), 'mm-d-yy_h:MM:sstt');
-        let circleColors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
-        let circleColorIndex = 0;
+          this._http.get('assets/logo-base-64', {
+            responseType: 'text'
+          }).subscribe(logoData => {
 
-        // Add our fonts in base64 encoding
-        doc.addFileToVFS('Spectral-Bold.ttf', this.spectralFont);
-        doc.addFileToVFS('Roboto-Regular.ttf', this.robotoFont);
+          let canvasImg = this.canvasElement.nativeElement.toDataURL();
+          let doc = new jsPDF();
+          let dt = dateformat(new Date(), 'mm-d-yy_h:MM:sstt');
+          let circleColors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
+          let circleColorIndex = 0;
 
-        // Add names/styles for fonts
-        doc.addFont('Spectral-Bold.ttf', 'Spectral-Bold', 'normal');
-        doc.addFont('Roboto-Regular.ttf', 'Roboto-Regular', 'normal');
+          // Add our fonts in base64 encoding
+          doc.addFileToVFS('Spectral-Bold.ttf', this.spectralFont);
+          doc.addFileToVFS('Roboto-Regular.ttf', this.robotoFont);
 
-        let width = doc.internal.pageSize.getWidth();
-        let height = doc.internal.pageSize.getHeight();
+          // Add names/styles for fonts
+          doc.addFont('Spectral-Bold.ttf', 'Spectral-Bold', 'normal');
+          doc.addFont('Roboto-Regular.ttf', 'Roboto-Regular', 'normal');
 
-        doc.addImage(logoData, 'PNG', 10, 20, 50, 10);
+          let width = doc.internal.pageSize.getWidth();
+          let height = doc.internal.pageSize.getHeight();
 
-        // Cleanup description so it doesn't overrun
-        let descArr = doc.splitTextToSize(this.project.description.replace(/(\r\n|\n|\r)/gm, ' '), width - 60);
+          // Add Meetr logo
+          doc.addImage(logoData, 'PNG', 10, 20, 50, 10);
 
-        // Offset begins at height of name + description and offsext
-        let globalYOffset = 85;
-        _.each(descArr, (d) => {
-          globalYOffset += doc.getTextDimensions(d).h;
-        });
-
-        doc.setFontSize(40)
-        doc.setFont('Spectral-Bold');
-        doc.text(10, 50, this.project.name);
-
-        doc.setFontSize(20);
-        doc.setFont('Roboto-Regular');
-        doc.text(10, 70, descArr);
-
-        // Survey prompt header
-        doc.setFontSize(15);
-        doc.text(10, globalYOffset, 'Survey Prompts:');
-        globalYOffset += 10;
-
-        // Draw all survey prompts
-        _.each(SurveyPrompts.prompts, (prompt, i) => {
+          // Meetr intro/explanation text
+          let introArr = doc.splitTextToSize(intro, width - 60);
+          let explanationArr = doc.splitTextToSize(explanation, width - 60);
+          doc.setFontSize(20);
+          doc.setFont('Roboto-Regular');
+          doc.text(10, 50, introArr);
           
-          let promptArr = doc.splitTextToSize((i+1) + '. ' + prompt.replace(/(\r\n|\n|\r)/gm, ' '), width - 40);
-          doc.text(10, globalYOffset, promptArr);
-
-          // Measure prompt height
-          _.each(promptArr, (d: any) => {
+          // Offset begins at height of intro and offsext
+          let globalYOffset = 60;
+          _.each(introArr, (d) => {
             globalYOffset += doc.getTextDimensions(d).h;
           });
-          globalYOffset += 5;
+          
+          // Explanation
+          doc.text(10, globalYOffset, explanationArr);
+          _.each(explanationArr, (d) => {
+            globalYOffset += doc.getTextDimensions(d).h;
+          });
+          
+          doc.setLineWidth(1.3);
+          doc.line(10, globalYOffset+10, width-20, globalYOffset+10, 'FD');
+          
+          // Cleanup description so it doesn't overrun
+          let descArr = doc.splitTextToSize(this.project.description.replace(/(\r\n|\n|\r)/gm, ' '), width - 60);
+          
+          doc.setFontSize(40)
+          doc.setFont('Spectral-Bold');
+          doc.text(10, globalYOffset + 30, this.project.name);
 
+          doc.setFontSize(20);
+          doc.setFont('Roboto-Regular');
+          doc.text(10, globalYOffset + 50, descArr);
 
-        });    
+          // Add page and reset global offset
+          doc.addPage();
+          globalYOffset = 0;
 
-        // Add page and reset global offset
-        doc.addPage();
-        globalYOffset = 0;
+          // Draw all progress entries
+          let prevNoteHeight = 0;
+          let newPage = false;
+          _.each(this.progress, (p: any, i: number) => {
 
-        // Draw all progress entries
-        let prevNoteHeight = 0;
-        let newPage = false;
-        _.each(this.progress, (p: any, i: number) => {
+            // Offset on y is project description plus cumulative previous note heights, unless new pg just added
+            let yOffset = newPage ? 20 : (globalYOffset+prevNoteHeight) + 20;
+            if(newPage) newPage = false;
 
-          // Offset on y is project description plus cumulative previous note heights, unless new pg just added
-          let yOffset = newPage ? 20 : (globalYOffset+prevNoteHeight) + 50;
-          if(newPage) newPage = false;
+            // Line only for records past first
+            if(i > 0)
+              doc.line(10, yOffset, width-20, yOffset, 'FD');
 
-          // Line only for records past first
-          if(i > 0)
-            doc.line(10, yOffset, width-20, yOffset, 'FD');
+            doc.setFontSize(14);
+            doc.setDrawColor(0);
 
-          doc.setFontSize(14);
-          doc.setDrawColor(0);
+            // Circle for response #
+            doc.setFillColor(circleColors[circleColorIndex]);
 
-          // Circle for response #
-          doc.setFillColor(circleColors[circleColorIndex]);
+            if(circleColorIndex === 3)
+              circleColorIndex = 0;
+            else
+              circleColorIndex++;
 
-          if(circleColorIndex === 3)
-            circleColorIndex = 0;
-          else
-            circleColorIndex++;
+            doc.circle(16, yOffset + 10, 4, 'F');
 
-          doc.circle(16, yOffset + 10, 4, 'F');
+            // Response #
+            doc.setTextColor(255,255, 255);
+            doc.text(14.5, yOffset + 12, (this.progress.length-i)+'');
 
-          // Response #
-          doc.setTextColor(255,255, 255);
-          doc.text(14.5, yOffset + 12, (this.progress.length-i)+'');
+            // Date
+            doc.setTextColor(0, 0, 0);
+            doc.text(40, yOffset + 12, dateformat(p.date, 'mm/dd/yyyy'));
+            doc.text(90, yOffset + 12, p.sumX/2 + ', ' + p.sumY/2);
 
-          // Date
-          doc.setTextColor(0, 0, 0);
-          doc.text(40, yOffset + 12, dateformat(p.date, 'mm/dd/yyyy'));
-          doc.text(90, yOffset + 12, p.sumX/2 + ', ' + p.sumY/2);
+            // Add note if defined
+            if(p.note) {
 
-          // Add note if defined
-          if(p.note) {
+              // Note cannot exceed specified width
+              let noteArr = doc.splitTextToSize(p.note, 75);
 
-            // Note cannot exceed specified width
-            let noteArr = doc.splitTextToSize(p.note, 75);
+              doc.setTextColor(151, 151, 151);
+              doc.text(120, yOffset + 12, noteArr);
 
-            doc.setTextColor(151, 151, 151);
-            doc.text(120, yOffset + 12, noteArr);
+              // Measure note height
+              _.each(noteArr, (d: any) => {
+                prevNoteHeight += doc.getTextDimensions(d).h;
+              });
 
-            // Measure note height
-            _.each(noteArr, (d: any) => {
-              prevNoteHeight += doc.getTextDimensions(d).h;
+            }
+
+            // If approaching height of page, add a page and reset cumulative height
+            if((yOffset + prevNoteHeight) > (height+20)) {
+              doc.addPage();
+
+              newPage = true;
+              globalYOffset = 0;
+              prevNoteHeight = 0;
+            }
+
+            // Buffer
+            prevNoteHeight += 20;
+
+          });
+
+          doc.addPage();
+
+          // Add img under description
+          doc.addImage(canvasImg, 'PNG', 0, 50 + globalYOffset, width, width);
+
+          // Page for prompts
+          doc.addPage();
+
+          // Reset global offset
+          globalYOffset = 20;
+          
+          // Survey prompt header
+          doc.setFontSize(20);
+          doc.text(10, globalYOffset, 'Survey Prompts and Responses:');
+          
+          globalYOffset += 20;
+          doc.setFontSize(10);
+          
+          // Draw all survey prompts and answers for each per tracking
+          _.each(SurveyPrompts.prompts, (prompt, i) => {
+            
+            doc.setTextColor(0, 0, 0);
+            let promptArr = doc.splitTextToSize((i+1) + '. ' + prompt.replace(/(\r\n|\n|\r)/gm, ' '), width - 40);
+            doc.text(10, globalYOffset, promptArr);
+
+            // Measure prompt height
+            _.each(promptArr, (d: any) => {
+              globalYOffset += doc.getTextDimensions(d).h;
             });
 
-          }
+            // Print all answers in project for this prompt
+            circleColorIndex = 3;
+            globalYOffset += 10;
 
-          // If approaching height of page, add a page and reset cumulative height
-          if((yOffset + prevNoteHeight) > (height-50)) {
-            doc.addPage();
-            newPage = true;
-            globalYOffset = 0;
-            prevNoteHeight = 0;
-          }
+            doc.setFontSize(12);
+            _.each(responses, (res, ind) => {
 
-          // Buffer
-          prevNoteHeight += 20;
+              // Circle for response #
+              doc.setFillColor(circleColors[circleColorIndex]);
+
+              if(circleColorIndex === 3)
+                circleColorIndex = 0;
+              else
+                circleColorIndex++;
+
+              doc.circle(16*(ind+1), globalYOffset, 4, 'F');
+
+              // Response #
+              doc.setTextColor(255,255, 255);
+              doc.text((16*(ind+1))-.9, globalYOffset + 1, (this.progress.length-ind)+'');
+            });
+            
+            globalYOffset += 25;
+
+
+          });
+
+          doc.save('results_' + this.project.slug + '_' + dt + '.pdf');
 
         });
 
-        doc.addPage();
-
-        // Add img under description
-        doc.addImage(canvasImg, 'PNG', 0, 50 + globalYOffset, width, width);
-
-        doc.save('results_' + this.project.slug + '_' + dt + '.pdf');
-
-      });
+        });
 
       });
 
     });
+
   }
 
   public viewAll() {

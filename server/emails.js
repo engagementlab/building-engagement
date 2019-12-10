@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Engagement Journalism API server
+ * Meetr API server
  * Developed by Engagement Lab, 2019
  * ==============
  * Script for sending out project survey reminder emails

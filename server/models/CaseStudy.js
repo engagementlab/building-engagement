@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Engagement Journalism API server
+ * Meetr API server
  * 
  * CaseStudy page Model
  * @module casestudy

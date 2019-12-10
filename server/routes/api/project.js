@@ -9,7 +9,8 @@
  * ==========
  */
 const Project = require('../../models/Project'),
-      Progress = require('../../models/Progress');
+      Progress = require('../../models/Progress'),
+      PDF = global.keystone.list('PDF').model;
 
 /*
  * Create data
@@ -67,7 +68,7 @@ exports.delete = async (req, res) => {
  */
 exports.getAll = async (req, res) => { 
 
-    let userProjects = Project.find({user: req.params.userId}, 'name description slug -_id');
+    let userProjects = Project.find({user: req.params.userId}, 'name explanation slug -_id');
  
     try {
         let getRes = await userProjects.exec();
@@ -79,7 +80,7 @@ exports.getAll = async (req, res) => {
 }
 
 /*
- * Get project by id
+ * Get project by user and project's slug/id
  */
 exports.get = async (req, res) => { 
 
@@ -90,7 +91,7 @@ exports.get = async (req, res) => {
         let projProgress = Progress.find({project: getProjectRes._id}, 'sumX sumY note date -_id').sort({date: -1});
         let getProgressRes = await projProgress.exec();
 
-        res.json({project: getProjectRes, progress: getProgressRes});
+        res.json({project: getProjectRes, progress: getProgressRes, projectId: getProjectRes._id});
     }
     catch(e) {
         console.error(e);
@@ -98,3 +99,21 @@ exports.get = async (req, res) => {
     }
 }
 
+/*
+ * Get pre-filled CMS text to insert in project PDF and all this project's responses
+ */
+exports.pdf = async (req, res) => { 
+
+    let pdf = PDF.findOne({}, 'intro explanation -_id');
+    let projProgress = Progress.find({project: req.params.projectId}, 'responses -_id').sort({date: -1});
+ 
+    try {
+        let getResPdfTxt = await pdf.exec();
+        let getProgressRes = await projProgress.exec();
+
+        res.json({text: getResPdfTxt, responses: getProgressRes});
+    }
+    catch(e) {
+        res.status(500).json({e});
+    }
+}
