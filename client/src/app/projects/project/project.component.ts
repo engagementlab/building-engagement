@@ -23,13 +23,16 @@ export class ProjectComponent implements OnInit {
   public project: any;
   public projectId: string;
   public projectDbId: string;
+  public errorMsg: string;
+  
   public progress: any[];
+
   public hasContent: boolean;
   public noProgress: boolean;
   public isPhone: boolean;
   public showPrompt: boolean;
 
-  public errorMsg: string;
+  public reminderNextDate: any;
 
   canvasElement: ElementRef;
   
@@ -86,9 +89,27 @@ export class ProjectComponent implements OnInit {
 
         this.hasContent = true;
 
-        this.noProgress = this.progress && this.progress.length === 0
+        this.noProgress = this.progress && this.progress.length === 0;
 
         this._dataSvc.currentProjectId = response.project._id;
+
+        // Set reminder date for display, if any
+        if(this.project.reminderPeriod !== undefined) {
+          // Get last reminder date
+          let lastDate = new Date(this.project.lastReminderDate), nextDate = null;
+          switch(this.project.reminderPeriod) {
+            case 0: 
+            nextDate = lastDate.setDate(lastDate.getDate() + 14);
+            break;
+            // case 1: 
+            // delta = today.getDate() + 31;
+            // break;
+            // case 2: 
+            // delta = today.getDate() + 62;
+            // break;
+          }
+          this.reminderNextDate = nextDate;
+        }
 
         if (!this.progress || (this.progress && this.progress.length < 1)) return;
 
@@ -118,6 +139,12 @@ export class ProjectComponent implements OnInit {
         this._router.navigateByUrl('/projects');
 
     });
+
+  }
+
+  cancelReminders() {
+
+
 
   }
 
@@ -390,8 +417,15 @@ export class ProjectComponent implements OnInit {
 
   public promptDelete() {
     
-    if(confirm('Are you sure you want to delete this project'))
+    if(confirm('Are you sure you want to delete this project?'))
       this.deleteProject();
+
+  }
+
+  public promptCancelReminder() {
+
+    if(confirm('Are you sure you want to cancel reminders for this project?'))
+      this.cancelReminders();
 
   }
 

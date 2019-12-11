@@ -20,9 +20,15 @@
 
     <div id="top" class="column columns is-full is-mobile is-multiline">
       <h4 class="column is-11-mobile is-5-tablet no-margin">{{project.name}}</h4>
-      <p class="column is-8-mobile is-6-tablet">
-        {{project.description}}
-      </p>
+      <div class="column is-8-mobile is-6-tablet">
+        <p>
+          {{project.description}}
+        </p>
+
+        <div id="reminder" *ngIf="reminderNextDate">
+          Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}} (Cancel reminders)
+        </div>
+      </div>
 
       <!-- empty for layout purposes -->
       <div class="column is-5-tablet hidden-mobile"></div>
@@ -52,7 +58,6 @@
       <div class="column hidden-tablet-plus">
         <a routerLink="/projects/{{project.slug}}/track" class="mono uppercase">2 Track your Progress</a>
       </div>
-
 
     </div>
 
