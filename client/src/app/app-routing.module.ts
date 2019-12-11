@@ -16,6 +16,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 
 import { AuthGuard } from './utils/auth.guard';
 import { CallbackComponent } from './utils/callback/callback.component';
+import { ActivityIntroComponent } from './activity/intro/intro.component';
 
 const routes: Routes = [
   {
@@ -69,12 +70,20 @@ const routes: Routes = [
     component: StudiesComponent
   },
   {
-    path: 'talk',
+    path: 'talk/activity',
     component: ActivityComponent
   },
   {
-    path: 'talk/:project-slug',
+    path: 'talk/activity/:project-slug',
     component: ActivityComponent
+  },
+  {
+    path: 'talk',
+    component: ActivityIntroComponent
+  },
+  {
+    path: 'talk/:project-slug',
+    component: ActivityIntroComponent
   },
   {
     path: '**',

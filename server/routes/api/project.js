@@ -88,7 +88,7 @@ exports.get = async (req, res) => {
     
     try {
         let getProjectRes = await userProject.exec();
-        let projProgress = Progress.find({project: getProjectRes._id}, 'sumX sumY note date -_id').sort({date: -1});
+        let projProgress = Progress.find({project: getProjectRes._id}, 'sumX sumY note date -_id');
         let getProgressRes = await projProgress.exec();
 
         res.json({project: getProjectRes, progress: getProgressRes, projectId: getProjectRes._id});
@@ -105,7 +105,7 @@ exports.get = async (req, res) => {
 exports.pdf = async (req, res) => { 
 
     let pdf = PDF.findOne({}, 'intro explanation -_id');
-    let projProgress = Progress.find({project: req.params.projectId}, 'responses -_id').sort({date: -1});
+    let projProgress = Progress.find({project: req.params.projectId}, 'responses -_id');
  
     try {
         let getResPdfTxt = await pdf.exec();

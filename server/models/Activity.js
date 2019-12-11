@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Meetr API server
+ * Engagement Journalism API server
  * Activity page Model
  * @module activity
  * 

@@ -18,14 +18,13 @@ var buildData = async (type, res) => {
     let aboutActivityFields = 'guidePdf.url -_id';
     let studiesFields = 'name description url -_id';
     let activityFields = 'name intro step1.html step2.html step3.html step4.html step5.html';
-    let userFields = 'name email'
+    let activityIntroFields = 'instructions.html -_id';
 
     let home = keystone.list('Home').model;
     let about = keystone.list('About').model;
     let study = keystone.list('CaseStudy').model;
     let activity = keystone.list('Activity').model;
-    let projects = require('../../models/Project');
-    let appuser = require('../../models/AppUser');
+    let activityIntro = keystone.list('ActivityIntro').model;
 
     let data = null;
     let getRes = [];
@@ -37,7 +36,8 @@ var buildData = async (type, res) => {
     else if (type === 'about') {
         // Get about
         data = about.findOne({}, aboutFields);
-    } else if(type === 'activity') {
+    } 
+    else if(type === 'activity') {
         
         // Get all activities
         data = activity.find({}, activityFields).sort({order: 1});
@@ -46,45 +46,10 @@ var buildData = async (type, res) => {
         getRes.push(await fileData.exec());
 
     }
-    else if(type === 'dump') {
-
-        let finalRes = [];
-        // Get all data
-        data = appuser.find({}, userFields);
-        // data = projects.find({}, projectFields).populate('user', 'name -_id');
-        data.exec().then(results => {
-            return Promise.all(results.map(user => {
-                return projects.find({user: user._id}, 'name description -_id')
-                .exec()
-                .then((projData) => {
-                    let updatedUser = Object.assign(user, projData)
-                    // user.projects = projData
-                    console.log(user, updatedUser)
-                    return updatedUser
-                });
-            }));
-        }).then(final => {
-
-            try {
-                res.json(final);
-            } catch (e) {
-                console.error(e)
-                res.status(500).json({
-                    e
-                });
-            }
-
-        });
-        // data = [];
-        // _l.each(results, async function(r) {
-        //     console.log(r._id)
-        //     let projQ = projects.find({user: r._id}, 'name description -_id');
-        //     let projData = await projQ.exec();
-        //     r.projects = projData
-        //     data.push(r)
-        // })
-        return;
-    }
+    else if (type === 'activity-intro') {
+        // Get activites intro (talk it out)
+        data = activityIntro.findOne({}, activityIntroFields);
+    } 
     else {
         
         // Get all studies

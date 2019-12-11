@@ -30,8 +30,8 @@ export class ProjectGrid {
 
       let tooltip: paper.PointText;
       let segments: paper.Point[] = [];
-      let colors = ['#e9bbb0', '#e85e5d', '#634da0', '#5a5c27'];
-      let colorIndex = 4;
+      let colors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
+      let colorIndex = -1;
 
       let boxW = ((widthExt) / 2) / 6;
       let gLines: paper.Group = new p.Group();
@@ -126,8 +126,8 @@ export class ProjectGrid {
       // Plot dots on grid
       this.progress.forEach((survey, i) => {
 
-        if (colorIndex === 0) colorIndex = 4;
-        colorIndex--;
+        if (colorIndex === 3) colorIndex = -1;
+        colorIndex++;
 
         let xPos = (widthExt / 2) + ((survey.sumX / 2) * ((widthExt / 2) / 7)),
           yPos = (heightExt / 2) - (survey.sumY / 2) * ((heightExt / 2) / 7);
@@ -143,7 +143,7 @@ export class ProjectGrid {
 
         let txt = new p.PointText({
           point: [xPos - 5, yPos + 5],
-          content: this.progress.length - i,
+          content: i+1,
           fillColor: 'white',
           fontSize: 16
         });

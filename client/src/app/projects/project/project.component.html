@@ -76,7 +76,7 @@
         <div class="columns is-mobile" *ngFor="let entry of progress; let i = index;">
           <div class="column is-1">
             <span class="num mono">
-              {{progress.length - i}}
+              {{i+1}}
             </span>
           </div>
           <div class="column is-2">
@@ -101,6 +101,7 @@
       </div>
       
       <div class="bottom mono columns">
+        
         <a class="column is-half" routerLink="/projects" *ngIf="progress">
           <svg width="54" height="42" fill="none" viewBox="0 0 54 42">
             <path stroke="#000" d="M54 20.405H.717M21.671 41.569L.358 20.256"/>
@@ -109,7 +110,8 @@
         
           <span>Back to Projects</span>
         </a>
-        <a class="column" routerLink="/projects/{{projectId}}" (click)="promptDelete()">
+
+        <a id="delete" class="column" routerLink="/projects/{{projectId}}" (click)="promptDelete()">
             Delete this Project
         </a>
         </div>

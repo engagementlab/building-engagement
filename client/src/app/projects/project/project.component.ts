@@ -128,7 +128,7 @@ export class ProjectComponent implements OnInit {
 
       let intro = response.text.intro,
           explanation = response.text.explanation,
-          responses = response.responses;
+          allResponses = response.responses;
 
       // Fonts encoding for PDF
       this._http.get('assets/spectral-base-64', {
@@ -148,6 +148,7 @@ export class ProjectComponent implements OnInit {
           let canvasImg = this.canvasElement.nativeElement.toDataURL();
           let doc = new jsPDF();
           let dt = dateformat(new Date(), 'mm-d-yy_h:MM:sstt');
+
           let circleColors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
           let circleColorIndex = 0;
 
@@ -221,16 +222,14 @@ export class ProjectComponent implements OnInit {
             // Circle for response #
             doc.setFillColor(circleColors[circleColorIndex]);
 
-            if(circleColorIndex === 3)
-              circleColorIndex = 0;
-            else
-              circleColorIndex++;
+            if(circleColorIndex === 3) circleColorIndex = -1;
+            circleColorIndex++;
 
             doc.circle(16, yOffset + 10, 4, 'F');
 
             // Response #
             doc.setTextColor(255,255, 255);
-            doc.text(14.5, yOffset + 12, (this.progress.length-i)+'');
+            doc.text(14.5, yOffset + 12, (i+1)+'');
 
             // Date
             doc.setTextColor(0, 0, 0);
@@ -282,7 +281,7 @@ export class ProjectComponent implements OnInit {
           doc.setFontSize(20);
           doc.text(10, globalYOffset, 'Survey Prompts and Responses:');
           
-          globalYOffset += 20;
+          globalYOffset += 10;
           doc.setFontSize(10);
           
           // Draw all survey prompts and answers for each per tracking
@@ -298,29 +297,38 @@ export class ProjectComponent implements OnInit {
             });
 
             // Print all answers in project for this prompt
-            circleColorIndex = 3;
-            globalYOffset += 10;
+            circleColorIndex = -1;
+            globalYOffset += 4;
 
-            doc.setFontSize(12);
-            _.each(responses, (res, ind) => {
+            _.each(allResponses, (submission, ind) => {
+
+              if(circleColorIndex === 3) circleColorIndex = -1;
+              circleColorIndex++;
 
               // Circle for response #
               doc.setFillColor(circleColors[circleColorIndex]);
 
-              if(circleColorIndex === 3)
-                circleColorIndex = 0;
-              else
-                circleColorIndex++;
-
-              doc.circle(16*(ind+1), globalYOffset, 4, 'F');
+              let dotXPos = 24*(ind+1);
+              doc.circle(dotXPos, globalYOffset, 4, 'F');
 
               // Response #
-              doc.setTextColor(255,255, 255);
-              doc.text((16*(ind+1))-.9, globalYOffset + 1, (this.progress.length-ind)+'');
+              let txtXPos = (24*(ind+1))-.9;
+              doc.setTextColor(255, 255, 255);
+              doc.text(txtXPos, globalYOffset + 1, (ind+1)+'');
+
+              // Response entry
+              doc.setTextColor(0, 0, 0);
+              doc.text(txtXPos + 7, globalYOffset + 1, submission.responses[i]);
+
             });
             
-            globalYOffset += 25;
+            if(i < SurveyPrompts.prompts.length-1) {
+              doc.setDrawColor(212, 212, 212);
+              doc.setLineWidth(.3);
+              doc.line(10, globalYOffset+8, 100, globalYOffset+8, 'FD');
+            }
 
+            globalYOffset += 14;
 
           });
 
