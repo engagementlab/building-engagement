@@ -19,13 +19,12 @@ import { MenuComponent } from './menu/menu.component';
 import { NavComponent } from './nav/nav.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
+import { ProjectComponent } from './projects/project/project.component';
 import { ProjectsComponent } from './projects/projects.component';
 import { StudiesComponent } from './studies/studies.component';
 import { TrackComponent } from './projects/track/track.component';
 
-
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ProjectComponent } from './projects/project/project.component';
 
 // Cloudinary
 import { Cloudinary as CloudinaryCore } from 'cloudinary-core';

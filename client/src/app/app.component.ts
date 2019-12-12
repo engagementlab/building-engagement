@@ -4,6 +4,9 @@ import { Title } from '@angular/platform-browser';
 
 import { environment } from '../environments/environment';
 
+// Google Analytics function
+declare let ga: Function;
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -19,7 +22,20 @@ export class AppComponent implements OnInit {
 
     this.isQABuild = environment.qa;
     this._titleSvc.setTitle((this.isQABuild ? '(QA) ' : '') + this.title);
-  
+   
+    // Subscribe to router events and send page views to Google Analytics,
+    // if in production mode only
+    // if(!environment.production) return;
+    // if (environment.production && environment.qa) return;
+
+    this._router.events.subscribe(event => {
+
+      if (event instanceof NavigationEnd) {
+        ga('set', 'page', event.urlAfterRedirects);
+        ga('send', 'pageview');
+      }
+
+    });
   }
 
   ngOnInit() {
