@@ -12,7 +12,7 @@
     "url": "git+https://github.com/engagementlab/make-foia-work.git"
   },
   "dependencies": {
-    "@engagementlab/el-bootstrapper": "^0.0.6",
+    "@engagementlab/el-bootstrapper": "0.0.7",
     "bluebird": "^3.5.5",
     "cloudinary": "^1.14.0",
     "connect-flash": "^0.1.1",
