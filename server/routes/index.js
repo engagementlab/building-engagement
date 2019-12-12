@@ -43,6 +43,9 @@ router.get('/api/project/get/:userId/:projectId', routeIncludes, routes.api.proj
 router.get('/api/project/delete/:userId/:projectId', routeIncludes, routes.api.project.delete);
 router.get('/api/project/pdf/:projectId', routeIncludes, routes.api.project.pdf);
 
+router.post('/api/project/reminders/create', routeIncludes, routes.api.project.setReminder);
+router.get('/api/project/reminders/cancel/:userId/:projectId', routeIncludes, routes.api.project.cancelReminder);
+
 router.post('/api/progress/create', routeIncludes, routes.api.progress.create);
 
 router.get('/api/admin/get/users', routeIncludes, routes.api.admin.users);

@@ -18,7 +18,6 @@ const Project = require('../../models/Project'),
  */
 exports.create = async (req, res) => { 
 
-
     let projectNameClean = req.body.name.replace(/ +?/g, '').toLowerCase();
     let displayName = req.body.name.replace(/ /g, '-').toLowerCase().replace(/[^\w\s]/gi, '-');
 
@@ -124,4 +123,39 @@ exports.pdf = async (req, res) => {
     catch(e) {
         res.status(500).json({e});
     }
+}
+
+exports.setReminder = async (req, res) => {
+
+    let userProject = await Project.findOne({user: req.body.userId, slug: req.body.projectId}).exec();
+    userProject.reminderPeriod = req.body.period;
+    userProject.reminderEmail = req.body.email;
+
+    try {
+        await userProject.save();
+        
+        res.json({set: true});
+    }
+    catch(e) {
+        console.error(e)
+        res.status(500).json({e});
+    }
+
+}
+
+exports.cancelReminder = async (req, res) => {
+
+    let userProject = await Project.findOne({user: req.params.userId, slug: req.params.projectId}).exec();
+    userProject.reminderPeriod = null;
+
+    try {
+        await userProject.save();
+        
+        res.json({cancelled: true});
+    }
+    catch(e) {
+        console.error(e)
+        res.status(500).json({e});
+    }
+
 }

@@ -12,6 +12,7 @@ import * as _ from 'underscore';
 import * as ismobile from 'ismobilejs';
 import * as jsPDF from 'jspdf';
 import * as dateformat from 'dateformat';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-project',
@@ -24,15 +25,20 @@ export class ProjectComponent implements OnInit {
   public projectId: string;
   public projectDbId: string;
   public errorMsg: string;
+  public reminderFirstDate: string;
   
   public progress: any[];
+  public reminderIntervals: any = ['Every two weeks', 'Once a month', 'Every other month'];
 
   public hasContent: boolean;
   public noProgress: boolean;
   public isPhone: boolean;
   public showPrompt: boolean;
+  public reminderSet: boolean;
 
   public reminderNextDate: any;
+
+  public reminderForm: FormGroup;
 
   canvasElement: ElementRef;
   
@@ -58,7 +64,7 @@ export class ProjectComponent implements OnInit {
     }
   };
 
-  constructor(private _dataSvc: DataService, private _route: ActivatedRoute, private _router: Router, private _http: HttpClient) {
+  constructor(private _dataSvc: DataService, private _route: ActivatedRoute, private _router: Router, private _http: HttpClient, private _formBuilder: FormBuilder) {
 
     this.isPhone = ismobile.phone;
 
@@ -71,6 +77,11 @@ export class ProjectComponent implements OnInit {
         this.userId = id;
         this.getData();
       } 
+    });
+
+    this.reminderForm = this._formBuilder.group({
+      'reminderEmail': ['', [Validators.email]],
+      'reminderInterval': [''],
     });
 
   }
@@ -94,21 +105,11 @@ export class ProjectComponent implements OnInit {
         this._dataSvc.currentProjectId = response.project._id;
 
         // Set reminder date for display, if any
-        if(this.project.reminderPeriod !== undefined) {
-          // Get last reminder date
-          let lastDate = new Date(this.project.lastReminderDate), nextDate = null;
-          switch(this.project.reminderPeriod) {
-            case 0: 
-            nextDate = lastDate.setDate(lastDate.getDate() + 14);
-            break;
-            // case 1: 
-            // delta = today.getDate() + 31;
-            // break;
-            // case 2: 
-            // delta = today.getDate() + 62;
-            // break;
-          }
-          this.reminderNextDate = nextDate;
+        if(this.project.reminderPeriod || this.project.reminderPeriod === 0) {
+
+          this.reminderSet = true;
+          this.calcReminderDate(this.project.lastReminderDate, this.project.reminderPeriod);
+
         }
 
         if (!this.progress || (this.progress && this.progress.length < 1)) return;
@@ -142,9 +143,63 @@ export class ProjectComponent implements OnInit {
 
   }
 
+  calcReminderDate(lastReminder, period) {
+
+    // Get last reminder date
+    let lastDate = new Date(lastReminder), 
+        nextDate = null, 
+        daysAhead = 0;
+
+    // Advance to next reminder day
+    switch(this.project.reminderPeriod) {
+      case 0: 
+        daysAhead = 14;
+        break;
+      case 1: 
+        daysAhead = 31;
+        break;
+      case 2: 
+        daysAhead = 62;
+        break;
+    }
+
+    nextDate = lastDate.setDate(lastDate.getDate() + daysAhead);
+    this.reminderNextDate = nextDate;
+
+  }
+
   cancelReminders() {
 
+    this._dataSvc.getDataForUrl('/api/project/reminders/cancel/' + this.userId + '/' + this.projectId).subscribe((response: any) => {
 
+      // If success, update reminder display
+      if(response.cancelled)
+        this.reminderSet = false;
+
+    });
+
+  }
+
+  public setReminder() {
+
+    if(!this.reminderForm.valid) return;
+
+    let data = {
+      userId: this.userId,
+      projectId: this.projectId,
+      reminderEmail: this.reminderForm.controls['reminderEmail'].value,
+      reminderPeriod: this.reminderForm.controls['reminderInterval'].value,
+    };
+
+    this._dataSvc.sendDataToUrl('/api/project/reminders/create', data).subscribe((response: any) => {
+
+      // If success, update reminder display
+      if(response.set)
+        this.reminderSet = true;
+
+      this.calcReminderDate(new Date(), data.reminderPeriod);
+
+    });
 
   }
 
@@ -400,6 +455,34 @@ export class ProjectComponent implements OnInit {
       display: 'block',
       delay: allResults.length * .3
     });
+
+  }
+
+  // Cache reminder interval index
+  public changeInterval(evt) {
+      
+    /* 0 = 'Every two weeks', 
+      1 = 'Once a month', 
+      2 = 'Every other month'
+    */
+    let today = new Date();
+    let delta = 0;
+
+    let introArr = parseInt((evt.target as HTMLOptionElement).value);
+
+    switch(introArr) {
+      case 0: 
+        delta = today.getDate() + 14;
+        break;
+      case 1: 
+        delta = today.getDate() + 31;
+        break;
+      case 2: 
+        delta = today.getDate() + 62;
+        break;
+    }
+
+    this.reminderFirstDate = dateformat(new Date().setDate(delta), 'mmmm dS, yyyy');
 
   }
 
