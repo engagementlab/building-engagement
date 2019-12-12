@@ -10,18 +10,26 @@
  */
 const Project = require('../../models/Project'),
       Progress = require('../../models/Progress'),
-      PDF = global.keystone.list('PDF').model;
+      PDF = global.keystone.list('PDF').model,
+      _ = require('lodash');
 
 /*
  * Create data
  */
 exports.create = async (req, res) => { 
 
+
+    let projectNameClean = req.body.name.replace(/ +?/g, '').toLowerCase();
     let displayName = req.body.name.replace(/ /g, '-').toLowerCase().replace(/[^\w\s]/gi, '-');
-    let projectCt = await Project.count({name: req.body.name, user: req.body.userId}).exec();
+
+    // Get all user's project names and check if any match cleaned, posted name
+    let allNames = await Project.find({user: req.body.userId}, 'name -_id').exec();
+    let nameExists = _.some(allNames, (record, i) => {
+        return record.name.replace(/ +?/g, '').toLowerCase() === projectNameClean;
+    });
 
     // Check if already exists
-    if(projectCt > 0) {
+    if(nameExists) {
         res.sendStatus(409);
         return;
     }
