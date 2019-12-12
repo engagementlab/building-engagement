@@ -19,6 +19,7 @@ export class AdminComponent implements OnInit {
   public users: any;
   public hasContent: boolean;
 
+  public hasProjects: boolean;
   public currentProjects: any[];
 
   constructor(private _dataSvc: DataService,
@@ -33,12 +34,12 @@ export class AdminComponent implements OnInit {
   }
 
   checkAdmin(isAdmin: boolean) {
-    
+
     this.isLoading = false;
-    
+
     if (!isAdmin) {
       if (!environment.production)
-        this.allowAccess = true; 
+        this.allowAccess = true;
     } else {
       this.allowAccess = true;
 
@@ -55,7 +56,7 @@ export class AdminComponent implements OnInit {
   }
 
   viewProjects(projects: any[]) {
-    
+    this.hasProjects = typeof projects !== 'undefined' && projects.length > 0;
     this.currentProjects = projects;
     document.getElementById('projects-modal').style.display = 'flex';
 
