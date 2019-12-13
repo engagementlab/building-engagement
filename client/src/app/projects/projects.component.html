@@ -31,33 +31,56 @@
         (submit)="submitNew()">
         <div class="fields column is-half no-pad">
           <div class="column is-full">
-            <input formControlName="name" id="name" placeholder="Project Name" required />
+            <input
+              formControlName="name"
+              id="name"
+              placeholder="Project Name"
+              maxlength="{{nameLimit}}"
+              type="text"
+              required
+              (keyup)="countName($event)" />
+            <div *ngIf="nameCount > 0">{{nameCount}} / {{nameLimit}}</div>
             <div *ngIf="projectSubmitted && f.name.invalid">
               <span *ngIf="f.name.errors.required">Required.</span>
             </div>
           </div>
 
           <div class="column is-full">
-            <textarea formControlName="description" id="description" placeholder="Project Description" rows="5"
-              maxlength="150" required (keyup)="countDes($event)"></textarea>
+            <textarea
+              formControlName="description"
+              id="description"
+              placeholder="Project Description"
+              rows="5"
+              maxlength="{{descLimit}}"
+              required
+              (keyup)="countDes($event)"></textarea>
             <div *ngIf="descCount > 0">{{descCount}} / {{descLimit}}</div>
             <div *ngIf="projectSubmitted && f.description.invalid">
               <span *ngIf="f.description.errors.required">Required.</span>
             </div>
           </div>
-                 
+
           <div class="column is-half">
-            <input formControlName="reminderEmail" id="email" placeholder="Email"/>
+            <input
+              formControlName="reminderEmail"
+              id="email"
+              type="email"
+              placeholder="Email"/>
             <div *ngIf="projectSubmitted && f.reminderEmail.invalid">
               <span *ngIf="f.reminderEmail.errors">Please enter a valid email.</span>
             </div>
           </div>
 
           <div class="column">
-              <select id="interval" (change)="changeCity($event)" formControlName="reminderInterval">
-                <option value="" disabled>Choose a reminder interval</option>
-                <option *ngFor="let interval of reminderIntervals; let i = index;" [ngValue]="i">{{interval}}</option>
-              </select>       
+              <select
+                id="interval"
+                (change)="changeCity($event)"
+                formControlName="reminderInterval">
+                  <option value="" disabled>Choose a reminder interval</option>
+                  <option
+                    *ngFor="let interval of reminderIntervals; let i = index;"
+                    [ngValue]="i">{{interval}}</option>
+              </select>
             <div *ngIf="projectSubmitted && f.reminderEmail.invalid">
               <span *ngIf="f.reminderEmail.errors">Please enter a valid email.</span>
             </div>
@@ -156,7 +179,15 @@
     <form id="new-form" class="columns column is-multiline" [formGroup]="newForm" (submit)="submitNew()">
       <div class="fields">
         <div class="column is-full">
-          <input formControlName="name" id="name" placeholder="Project Name" required />
+          <input
+              formControlName="name"
+              id="name"
+              placeholder="Project Name"
+              maxlength="{{nameLimit}}"
+              type="text"
+              required
+              (keyup)="countName($event)" />
+          <div *ngIf="nameCount > 0">{{nameCount}} / {{nameLimit}}</div>
           <div *ngIf="projectSubmitted && f.name.invalid">
             <span *ngIf="f.name.errors.required">Required.</span>
           </div>

@@ -19,6 +19,8 @@ export class ProjectsComponent implements OnInit {
   public errorMsg: string;
   public reminderFirstDate: string;
 
+  public nameLimit: number = 64;
+  public nameCount: number;
   public descLimit: number = 150;
   public descCount: number;
 
@@ -50,7 +52,7 @@ export class ProjectsComponent implements OnInit {
     let userId = this._dataSvc.userId.getValue();
     if(userId)
       this.getProjects(userId)
-    else 
+    else
     {
       this._dataSvc.userId.subscribe(id => {
         if(id) this.getProjects(id);
@@ -58,8 +60,8 @@ export class ProjectsComponent implements OnInit {
     }
 
     this.newForm = this._formBuilder.group({
-      'name': ['', [Validators.required]],
-      'description': ['', [Validators.required]],
+      'name': ['', [Validators.required, Validators.maxLength(this.nameLimit)]],
+      'description': ['', [Validators.required, Validators.maxLength(this.descLimit)]],
       'reminderEmail': ['', [Validators.email]],
       'reminderInterval': [''],
     });
@@ -73,13 +75,13 @@ export class ProjectsComponent implements OnInit {
   getProjects(userId) {
 
     this._dataSvc.getDataForUrl('/api/project/get/' + userId).subscribe((response: any) => {
-        
+
       this.projects = response;
       this.hasContent = true;
       this.noProjects = !this.projects || this.projects.length === 0;
 
     });
-  
+
   }
 
   create() {
@@ -104,7 +106,7 @@ export class ProjectsComponent implements OnInit {
     };
 
     this._dataSvc.sendDataToUrl('/api/project/create', data).subscribe((response: any) => {
-      
+
       // Hide modal
       document.getElementById('new-modal').style.display = 'none';
       document.body.classList.value = 'white';
@@ -112,33 +114,41 @@ export class ProjectsComponent implements OnInit {
 
       // Go to new project
       this._router.navigate(['projects', response.slug]);
-      
+
     },
     (err: HttpErrorResponse) => {
       if(err.status === 409)
-        this.errorMsg = 'You already have a project with that name';
+        this.errorMsg = 'You already have a project with that name.';
+
+      if (err.status === 413) {
+        this.errorMsg = 'Your project name is longer than 64 characters.'
+      }
     });
 
   }
 
-  closeModal() { 
+  closeModal() {
 
     document.getElementById('new-modal').style.display = 'none';
     document.body.classList.value = 'white';
 
   }
 
+  public countName(evt) {
+    this.nameCount = (evt.target as HTMLTextAreaElement).value.length
+  }
+
   public countDes(evt) {
 
     this.descCount = (evt.target as HTMLTextAreaElement).value.length;
-  
+
   }
 
   // Cache reminder interval index
   public changeInterval(evt) {
-      
-    /* 0 = 'Every two weeks', 
-      1 = 'Once a month', 
+
+    /* 0 = 'Every two weeks',
+      1 = 'Once a month',
       2 = 'Every other month'
     */
     let today = new Date();
@@ -147,13 +157,13 @@ export class ProjectsComponent implements OnInit {
     this.selectedInterval = parseInt((evt.target as HTMLOptionElement).value);
 
     switch(this.selectedInterval) {
-      case 0: 
+      case 0:
         delta = today.getDate() + 14;
         break;
-      case 1: 
+      case 1:
         delta = today.getDate() + 31;
         break;
-      case 2: 
+      case 2:
         delta = today.getDate() + 62;
         break;
     }

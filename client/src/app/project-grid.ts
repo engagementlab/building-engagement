@@ -6,16 +6,16 @@ import * as _ from 'underscore';
 export class ProjectGrid {
 
     progress: any[];
-  
+
     canvasElement: ElementRef;
     isPhone: boolean;
 
     constructor(progress: any[], canvas: ElementRef, phone: boolean) {
-        
+
       this.progress = progress;
       this.canvasElement = canvas;
       this.isPhone = phone;
-        
+
     }
 
     drawGrid() {
@@ -143,10 +143,16 @@ export class ProjectGrid {
 
         let txt = new p.PointText({
           point: [xPos - 5, yPos + 5],
-          content: i+1,
+          content: i + 1,
           fillColor: 'white',
           fontSize: 16
         });
+
+        // Can't reference bounds before txt is created so we center the text here.
+        txt.point = new paper.Point(
+          xPos - txt.bounds.width / 2,
+          txt.point.y,
+        )
 
         g.addChildren([dot, txt]);
 
@@ -180,7 +186,7 @@ export class ProjectGrid {
 
       // Scale to allow room for side labels
       gLines.scale(.9, new p.Point(widthExt / 2, heightExt / 2));
-  
+
 }
 
 }
