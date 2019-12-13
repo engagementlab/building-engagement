@@ -51,6 +51,10 @@ exports.create = async (req, res) => {
         slug: displayName
     });
 
+    // Set end date, if defined
+    if(req.body.reminderEndDate && req.body.reminderEndDate.length > 0)
+        newProject.reminderEndDate = new Date(req.body.reminderEndDate);
+
     try {
         let saveRes = await newProject.save();
         res.json(saveRes);
@@ -140,7 +144,10 @@ exports.setReminder = async (req, res) => {
     let userProject = await Project.findOne({user: req.body.userId, slug: req.body.projectId}).exec();
     userProject.reminderPeriod = parseInt(req.body.reminderPeriod);
     userProject.reminderEmail = req.body.reminderEmail;
-    userProject.reminderEndDate = new Date(req.body.reminderEndDate);
+
+    // Set end date, if defined
+    if(req.body.reminderEndDate && req.body.reminderEndDate.length > 0)
+        userProject.reminderEndDate = new Date(req.body.reminderEndDate);
 
     // Last reminder date is now, by default
     userProject.lastReminderDate = new Date(Date.now()).toISOString();

@@ -177,7 +177,7 @@
     </div>
 
     <form id="new-form" class="columns column is-multiline" [formGroup]="newForm" (submit)="submitNew()">
-      <div class="fields">
+      <div class="fields columns is-multiline is-mobile">
         <div class="column is-full">
           <input
               formControlName="name"
@@ -193,7 +193,7 @@
           </div>
         </div>
         <div class="column is-full">
-          <textarea formControlName="description" id="description" placeholder="Project Description" rows="5"
+          <textarea formControlName="description" id="description" placeholder="Project Description" rows="3"
             maxlength="150" (keyup)="countDes($event)" required></textarea>
           <div *ngIf="descCount > 0">{{descCount}} / {{descLimit}}</div>
           <div *ngIf="projectSubmitted && f.description.invalid">
@@ -201,20 +201,27 @@
           </div>
         </div>
 
-        <h5>Set up a survey reminder (optional)</h5>
-        <div class="column is-full">
+        <p class="no-margin">Set up a survey reminder (optional)</p>
+
+        <div class="column is-5">
             <select id="interval" (change)="changeInterval($event)" formControlName="reminderInterval">
-              <option value="" disabled>Choose a reminder interval</option>
+              <option value="">Choose:</option>
               <option *ngFor="let interval of reminderIntervals; let i = index;" value="{{i}}">{{interval}}</option>
             </select>
-            <div *ngIf="f.reminderInterval.value !== ''">
-              You will begin receiving reminders on {{reminderFirstDate}}
-            </div>
         </div>
+        
         <div class="column" *ngIf="f.reminderInterval.value !== ''">
+          <input class="enddate" type="datetime" placeholder="End date (optional)" formControlName="reminderEndDate" 
+          [class.hidden]="f.reminderInterval.value === ''" />
+        </div>
+
+        <div class="column is-full" *ngIf="f.reminderInterval.value !== ''">
           <input formControlName="reminderEmail" id="email" type="email" placeholder="Email"/>
           <div *ngIf="projectSubmitted && f.reminderEmail.invalid">
             <span *ngIf="f.reminderEmail.errors">Please enter a valid email.</span>
+          </div>
+          <div *ngIf="f.reminderInterval.value !== ''">
+            You will begin receiving reminders on {{reminderFirstDate}}
           </div>
         </div>
 

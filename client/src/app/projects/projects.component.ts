@@ -7,6 +7,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 import * as dateFormat from 'dateformat';
+import datepicker from 'js-datepicker';
 
 @Component({
   selector: 'app-projects',
@@ -35,6 +36,7 @@ export class ProjectsComponent implements OnInit {
   public newForm: FormGroup;
 
   selectedInterval: number;
+  datePicker: any;
 
   constructor(private _dataSvc: DataService, private _authSvc: AuthService, private _formBuilder: FormBuilder, private _router: Router) {}
 
@@ -64,6 +66,7 @@ export class ProjectsComponent implements OnInit {
       'description': ['', [Validators.required, Validators.maxLength(this.descLimit)]],
       'reminderEmail': ['', [Validators.email]],
       'reminderInterval': [''],
+      'reminderEndDate': ['']
     });
   }
 
@@ -102,7 +105,8 @@ export class ProjectsComponent implements OnInit {
       description: this.f['description'].value,
       userId: this._dataSvc.userId.getValue(),
       reminderEmail: this.f['reminderEmail'].value,
-      reminderPeriod: this.selectedInterval
+      reminderPeriod: this.selectedInterval,
+      reminderEndDate: (document.querySelector('.enddate') as HTMLInputElement).value
     };
 
     this._dataSvc.sendDataToUrl('/api/project/create', data).subscribe((response: any) => {
@@ -135,7 +139,9 @@ export class ProjectsComponent implements OnInit {
   }
 
   public countName(evt) {
-    this.nameCount = (evt.target as HTMLTextAreaElement).value.length
+    
+    this.nameCount = (evt.target as HTMLTextAreaElement).value.length;
+
   }
 
   public countDes(evt) {
@@ -170,6 +176,11 @@ export class ProjectsComponent implements OnInit {
 
     this.reminderFirstDate = dateFormat(new Date().setDate(delta), 'mmmm dS, yyyy');
 
+    setTimeout(() => {
+      if(!this.datePicker)
+      this.datePicker = datepicker('.enddate');
+    }, 100);
+      
   }
 
 }
