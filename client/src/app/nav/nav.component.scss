@@ -66,10 +66,14 @@ nav {
 
     display: flex;
     position: relative;
-    z-index: 20;
+    z-index: 99;
     min-width: 50px;
 
     justify-content: space-between;
+
+    #profile {
+      @include transition(opacity, .7s, ease-in-out);
+    }
 
     #lines {
       display: block;
@@ -140,6 +144,9 @@ nav {
 
     &.open {
 
+      #profile {
+        opacity: 0;
+      }
 
       #lines {
         @include translate(0, 5%);
