@@ -12,6 +12,7 @@ import * as _ from 'underscore';
 import * as ismobile from 'ismobilejs';
 import * as jsPDF from 'jspdf';
 import * as dateformat from 'dateformat';
+import datepicker from 'js-datepicker';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -26,6 +27,7 @@ export class ProjectComponent implements OnInit {
   public projectDbId: string;
   public errorMsg: string;
   public reminderFirstDate: string;
+  public reminderEndDate: string;
   
   public progress: any[];
   public reminderIntervals: any = ['Every two weeks', 'Once a month', 'Every other month'];
@@ -34,6 +36,7 @@ export class ProjectComponent implements OnInit {
   public noProgress: boolean;
   public isPhone: boolean;
   public showPrompt: boolean;
+  public reminderSubmitted: boolean;
   public reminderSet: boolean;
 
   public reminderNextDate: any;
@@ -41,6 +44,7 @@ export class ProjectComponent implements OnInit {
   public reminderForm: FormGroup;
 
   canvasElement: ElementRef;
+  datePicker: any;
   
   userId: string;
 
@@ -80,10 +84,10 @@ export class ProjectComponent implements OnInit {
     });
 
     this.reminderForm = this._formBuilder.group({
-      'reminderEmail': ['', [Validators.email]],
-      'reminderInterval': [''],
+      'reminderEmail': ['', [Validators.required, Validators.email]],
+      'reminderInterval': ['', [Validators.required]],
+      'reminderEndDate': [''],
     });
-
   }
 
   getData() {
@@ -99,7 +103,6 @@ export class ProjectComponent implements OnInit {
         this.projectDbId = response.projectId;
 
         this.hasContent = true;
-
         this.noProgress = this.progress && this.progress.length === 0;
 
         this._dataSvc.currentProjectId = response.project._id;
@@ -108,6 +111,8 @@ export class ProjectComponent implements OnInit {
         if(this.project.reminderPeriod || this.project.reminderPeriod === 0) {
 
           this.reminderSet = true;
+          this.reminderEndDate = this.project.reminderEndDate;
+
           this.calcReminderDate(this.project.lastReminderDate, this.project.reminderPeriod);
 
         }
@@ -145,13 +150,15 @@ export class ProjectComponent implements OnInit {
 
   calcReminderDate(lastReminder, period) {
 
+    if(typeof period === 'string') period = parseInt(period);
+
     // Get last reminder date
     let lastDate = new Date(lastReminder), 
         nextDate = null, 
         daysAhead = 0;
 
     // Advance to next reminder day
-    switch(this.project.reminderPeriod) {
+    switch(period) {
       case 0: 
         daysAhead = 14;
         break;
@@ -182,6 +189,7 @@ export class ProjectComponent implements OnInit {
 
   public setReminder() {
 
+    this.reminderSubmitted = true;
     if(!this.reminderForm.valid) return;
 
     let data = {
@@ -189,15 +197,21 @@ export class ProjectComponent implements OnInit {
       projectId: this.projectId,
       reminderEmail: this.reminderForm.controls['reminderEmail'].value,
       reminderPeriod: this.reminderForm.controls['reminderInterval'].value,
+      reminderEndDate: (document.querySelector('.enddate') as HTMLInputElement).value
     };
 
     this._dataSvc.sendDataToUrl('/api/project/reminders/create', data).subscribe((response: any) => {
 
       // If success, update reminder display
-      if(response.set)
-        this.reminderSet = true;
+      if(response.set) {
 
-      this.calcReminderDate(new Date(), data.reminderPeriod);
+        this.reminderSet = true;
+        this.calcReminderDate(new Date(), data.reminderPeriod);
+
+        TweenLite.to('#reminder-form', .4, {autoAlpha: 0, display: 'none'})
+
+      }
+
 
     });
 
@@ -509,6 +523,15 @@ export class ProjectComponent implements OnInit {
 
     if(confirm('Are you sure you want to cancel reminders for this project?'))
       this.cancelReminders();
+
+  }
+
+  public openReminder() {
+
+    if(!this.datePicker)
+      this.datePicker = datepicker('.enddate');
+      
+    TweenLite.fromTo('#reminder-form', .4, {autoAlpha: 0}, {autoAlpha: 1, display: 'block'})
 
   }
 

@@ -28,6 +28,9 @@ var projectSchema = new Schema({
 	lastReminderDate: {
 		type: Date
 	},
+	reminderEndDate: {
+		type: Date
+	},
     user: {
 		type: Schema.Types.ObjectId,
 		ref: 'AppUser'

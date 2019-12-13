@@ -12,6 +12,8 @@ $tablet: 768px;
 @import '~ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
 @import '~ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
 
+@import '~js-datepicker/src/datepicker.scss';
+
 @keyframes fade {
   from {
     opacity: 1;

@@ -31,19 +31,25 @@
               reminders</a>)
           </span>
           <span *ngIf="!reminderSet">
-            You currently have no reminder set. (<a (click)="promptCancelReminder()">Set reminder</a>)
+            You currently have no reminder set. (<a (click)="openReminder()">Set reminder</a>)
           </span>
           <form id="reminder-form" [formGroup]="reminderForm" (submit)="setReminder()">
 
-            <select id="interval" (change)="changeInterval($event)" formControlName="reminderInterval">
-              <option value="" disabled>Choose a reminder interval</option>
+            <select id="interval" (change)="changeInterval($event)" formControlName="reminderInterval" required>
+              <option value="">No reminder</option>
               <option *ngFor="let interval of reminderIntervals; let i = index;" value="{{i}}">{{interval}}</option>
             </select>
 
             <br />
-            <input formControlName="reminderEmail" id="email" type="email" placeholder="Reminder Email"
+            
+            <input class="enddate" type="datetime" placeholder="End date (optional)" formControlName="reminderEndDate" 
+            [class.hidden]="reminderForm.controls.reminderInterval.value === ''" />
+            
+            <br />
+            
+            <input formControlName="reminderEmail" id="email" type="email" placeholder="Reminder Email" required
               *ngIf="reminderForm.controls.reminderInterval.value !== ''" />
-            <div *ngIf="projectSubmitted && reminderForm.controls.reminderEmail.invalid">
+            <div *ngIf="reminderSubmitted && reminderForm.controls.reminderEmail.invalid">
               <span *ngIf="reminderForm.controls.reminderEmail.errors">Please enter a valid email.</span>
             </div>
 

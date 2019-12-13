@@ -125,11 +125,18 @@ exports.pdf = async (req, res) => {
     }
 }
 
+/*
+ * Set reminder for specified project
+ */
 exports.setReminder = async (req, res) => {
 
     let userProject = await Project.findOne({user: req.body.userId, slug: req.body.projectId}).exec();
-    userProject.reminderPeriod = req.body.period;
-    userProject.reminderEmail = req.body.email;
+    userProject.reminderPeriod = parseInt(req.body.reminderPeriod);
+    userProject.reminderEmail = req.body.reminderEmail;
+    userProject.reminderEndDate = new Date(req.body.reminderEndDate);
+
+    // Last reminder date is now, by default
+    userProject.lastReminderDate = new Date(Date.now()).toISOString();
 
     try {
         await userProject.save();
@@ -143,6 +150,9 @@ exports.setReminder = async (req, res) => {
 
 }
 
+/*
+ * Cancel reminder for specified project
+ */
 exports.cancelReminder = async (req, res) => {
 
     let userProject = await Project.findOne({user: req.params.userId, slug: req.params.projectId}).exec();
