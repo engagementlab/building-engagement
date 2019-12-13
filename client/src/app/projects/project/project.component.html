@@ -27,7 +27,11 @@
 
         <div id="reminder">
           <span *ngIf="reminderSet && reminderNextDate">
-            Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}} (<a (click)="promptCancelReminder()">Cancel
+            Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}}.<br/>
+            <span *ngIf="reminderEndDate">
+              Reminders will end on {{reminderEndDate | date: 'MM/dd/yyyy'}}.<br />
+            </span> 
+            (<a (click)="promptCancelReminder()">Cancel
               reminders</a>)
           </span>
           <span *ngIf="!reminderSet">
