@@ -16,7 +16,7 @@ const Project = require('../../models/Project'),
 /*
  * Create data
  */
-exports.create = async (req, res) => { 
+exports.create = async (req, res) => {
 
     let projectNameClean = req.body.name.replace(/ +?/g, '').toLowerCase();
     let displayName = req.body.name.replace(/ /g, '-').toLowerCase().replace(/[^\w\s]/gi, '-');
@@ -33,17 +33,24 @@ exports.create = async (req, res) => {
         return;
     }
 
-    let newProject = new Project({ 
-        name: req.body.name, 
-        description: req.body.description, 
+    // Make sure our fields aren't longer than what we expect in the client.
+    // see client/src/app/projects/projects.component.ts for values
+    if (req.body.name.length > 64 || req.body.description.length > 150) {
+        res.sendStatus(413);
+        return;
+    }
+
+    let newProject = new Project({
+        name: req.body.name,
+        description: req.body.description,
         reminderEmail: req.body.reminderEmail,
         reminderPeriod: req.body.reminderPeriod,
         // Last reminder date is now, by default
         lastReminderDate: new Date(Date.now()).toISOString(),
-        user: req.body.userId, 
-        slug: displayName 
+        user: req.body.userId,
+        slug: displayName
     });
- 
+
     try {
         let saveRes = await newProject.save();
         res.json(saveRes);
@@ -59,7 +66,7 @@ exports.create = async (req, res) => {
 exports.delete = async (req, res) => {
 
     let deleteQ = Project.deleteOne({user: req.params.userId, slug: req.params.projectId});
-    
+
     try {
         await deleteQ.exec();
         res.status(200).json({deleted: true});
@@ -73,10 +80,10 @@ exports.delete = async (req, res) => {
 /*
  * Get projects for user
  */
-exports.getAll = async (req, res) => { 
+exports.getAll = async (req, res) => {
 
     let userProjects = Project.find({user: req.params.userId}, 'name explanation slug -_id');
- 
+
     try {
         let getRes = await userProjects.exec();
         res.json(getRes);
@@ -89,10 +96,10 @@ exports.getAll = async (req, res) => {
 /*
  * Get project by user and project's slug/id
  */
-exports.get = async (req, res) => { 
+exports.get = async (req, res) => {
 
     let userProject = Project.findOne({user: req.params.userId, slug: req.params.projectId});
-    
+
     try {
         let getProjectRes = await userProject.exec();
         let projProgress = Progress.find({project: getProjectRes._id}, 'sumX sumY note date -_id');
@@ -109,11 +116,11 @@ exports.get = async (req, res) => {
 /*
  * Get pre-filled CMS text to insert in project PDF and all this project's responses
  */
-exports.pdf = async (req, res) => { 
+exports.pdf = async (req, res) => {
 
     let pdf = PDF.findOne({}, 'intro explanation -_id');
     let projProgress = Progress.find({project: req.params.projectId}, 'responses -_id');
- 
+
     try {
         let getResPdfTxt = await pdf.exec();
         let getProgressRes = await projProgress.exec();
@@ -133,7 +140,7 @@ exports.setReminder = async (req, res) => {
 
     try {
         await userProject.save();
-        
+
         res.json({set: true});
     }
     catch(e) {
@@ -150,7 +157,7 @@ exports.cancelReminder = async (req, res) => {
 
     try {
         await userProject.save();
-        
+
         res.json({cancelled: true});
     }
     catch(e) {
