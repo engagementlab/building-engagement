@@ -106,8 +106,10 @@ export class ProjectsComponent implements OnInit {
       userId: this._dataSvc.userId.getValue(),
       reminderEmail: this.f['reminderEmail'].value,
       reminderPeriod: this.selectedInterval,
-      reminderEndDate: (document.querySelector('.enddate') as HTMLInputElement).value
     };
+    
+    if(data.reminderPeriod)
+      data['reminderEndDate'] = (document.querySelector('.enddate') as HTMLInputElement).value
 
     this._dataSvc.sendDataToUrl('/api/project/create', data).subscribe((response: any) => {
 

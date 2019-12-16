@@ -68,7 +68,7 @@ bootstrap.start(
 
 		// Schedule email reminders (once per day at 6am on prod)
 		let schedule = require('node-schedule');
-		let period = NODE_ENV.environment === 'production' ? '0 6 * * *' : '* * * * *';
+		let period = process.env.NODE_ENV.environment === 'production' ? '0 6 * * *' : '* * * * *';
 		schedule.scheduleJob(period, () => {
 
 			Emails().catch(err => {
