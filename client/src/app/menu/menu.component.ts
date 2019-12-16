@@ -52,7 +52,7 @@ export class MenuComponent implements AfterViewInit {
    	this.tl = new TimelineLite({paused:true});
     
     let tl = this.tl;    
-    tl.set(menu, {css: {zIndex: 23}});
+    tl.set(menu, {css: {zIndex: 50}});
     tl.fromTo(menu, .2, {autoAlpha:0}, {autoAlpha:1});
     tl.fromTo(nav, .7, {autoAlpha:0, left:'-5%'}, {autoAlpha:1, left:0, ease: Expo.easeOut}, '+.3');
     tl.fromTo(document.getElementById('signout'), .7, {autoAlpha:0, top:'-5%'}, {autoAlpha:1, top:0, ease: Expo.easeOut}, '+.4');
