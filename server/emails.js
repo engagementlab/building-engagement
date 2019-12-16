@@ -15,7 +15,6 @@ require('dotenv').load();
 const SendEmail = async function () {
 
     const Project = require('./models/Project'),
-        mongoose = require('mongoose'),
         mailgun = require('mailgun-js')({
             apiKey: process.env.MAILGUN_KEY,
             domain: process.env.MAILGUN_DOMAIN
@@ -40,7 +39,7 @@ const SendEmail = async function () {
         reminderPeriod: {
             $ne: null
         }
-    }, 'name slug reminderPeriod reminderEmail lastReminderDate').populate('user');
+    }, 'name slug reminderPeriod reminderEmail reminderEndDate lastReminderDate').populate('user');
 
     try {
         let getRes = await projects.exec();
@@ -105,7 +104,6 @@ const SendEmail = async function () {
             html: body
         };
 
-
         // Send message batch, and updated affected projects
         mailgun.messages().send(data, async function (error, body) {
             if (error) {
@@ -119,6 +117,13 @@ const SendEmail = async function () {
             // new last reminder date
             await Promise.all(getRes.map(async (project) => {
                 project.lastReminderDate = new Date(Date.now()).toISOString();
+
+                // Stop reminder if end date set, and it's today or in past
+                if(project.reminderEndDate) {
+                    if(project.reminderEndDate <= new Date().getTime())
+                        project.reminderPeriod = null;
+                }
+
                 await project.save();
             }));
 
