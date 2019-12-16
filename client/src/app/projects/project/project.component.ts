@@ -496,6 +496,13 @@ export class ProjectComponent implements OnInit {
         break;
     }
 
+    let min = new Date(new Date().setDate(delta));
+    
+    if(!this.datePicker)
+      this.datePicker = datepicker('.enddate', {minDate: min});
+    else
+      this.datePicker.setMin(min);
+      
     this.reminderFirstDate = dateformat(new Date().setDate(delta), 'mmmm dS, yyyy');
 
   }
@@ -527,9 +534,6 @@ export class ProjectComponent implements OnInit {
   }
 
   public openReminder() {
-
-    if(!this.datePicker)
-      this.datePicker = datepicker('.enddate');
       
     TweenLite.fromTo('#reminder-form', .4, {autoAlpha: 0}, {autoAlpha: 1, display: 'block'})
 

@@ -178,9 +178,15 @@ export class ProjectsComponent implements OnInit {
 
     this.reminderFirstDate = dateFormat(new Date().setDate(delta), 'mmmm dS, yyyy');
 
+    let min = new Date(new Date().setDate(delta));
+        
     setTimeout(() => {
+      
       if(!this.datePicker)
-      this.datePicker = datepicker('.enddate');
+        this.datePicker = datepicker('.enddate', {minDate: min});
+      else
+        this.datePicker.setMin(min);
+      
     }, 100);
       
   }
