@@ -1,0 +1,16 @@
+@import '~src/style/_variables';
+
+#login {
+    padding: 7%;
+    background-color: #fdf5f3;
+  
+    #close-btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+  
+    button {
+      margin-top: 0;
+    }
+  }

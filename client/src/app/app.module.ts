@@ -27,6 +27,8 @@ import { ProjectNewComponent } from './projects/new/new.component';
 import { StudiesComponent } from './studies/studies.component';
 import { TrackComponent } from './projects/track/track.component';
 
+import { SignupSigninComponent } from './signup/signup.component';
+
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 // Cloudinary
@@ -66,7 +68,8 @@ export const config: CloudinaryConfiguration = cloudinaryConfiguration;
     AdminComponent,
     AdminProjectComponent,
     ActivityIntroComponent,
-    ProjectNewComponent
+    ProjectNewComponent,
+    SignupSigninComponent
   ],
   imports: [
     BrowserModule,

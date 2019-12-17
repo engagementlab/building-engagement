@@ -20,6 +20,7 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { AuthGuard } from './utils/auth.guard';
 import { CallbackComponent } from './utils/callback/callback.component';
 import { ActivityIntroComponent } from './activity/intro/intro.component';
+import { SignupSigninComponent } from './signup/signup.component';
 
 const routes: Routes = [
   {
@@ -92,6 +93,20 @@ const routes: Routes = [
   {
     path: 'talk/:project-slug',
     component: ActivityIntroComponent
+  },
+  {
+    path: 'signup',
+    component: SignupSigninComponent, 
+    data: {
+      signup: true
+    }
+  },
+  {
+    path: 'signin',
+    component: SignupSigninComponent, 
+    data: {
+      signup: false
+    }
   },
   {
     path: '**',

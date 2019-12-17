@@ -1,0 +1,143 @@
+<section id="login" class="container desktop">
+
+    <div class="no-bottom-space columns is-mobile is-multiline">
+        <h2 class="no-bottom-space column is-7-mobile is-9-tablet no-margin"><span id="up" *ngIf="signUpShow">Sign Up</span><span id="in" *ngIf="!signUpShow">Sign
+            In</span>
+        </h2>
+  
+        <div id="close-btn" class="column" *ngIf="!hideCloseButton">
+          <a (click)="closeModal()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" fill="none" viewBox="0 0 50 50">
+              <path stroke="#000" stroke-width="1" d="M11.414 11.586l27.577 28.991M40.406 11.121L11.414 38.699" />
+            </svg>
+          </a>
+        </div>
+      </div>
+  
+      <!-- SIGNIN -->
+       <div id="signin" class="columns is-mobile is-multiline" *ngIf="!signUpShow">
+  
+        <div class="column is-full-mobile is-5-tablet">
+          <p>Sign in with Google or Facebook</p>
+  
+          <div class="social-login">
+  
+            <a class="social" (click)="login('google-oauth2')">
+              <svg width="30" height="19" fill="none" viewBox="0 0 30 19">
+                <path fill="#000" fill-rule="evenodd" d="M9.545 8.094v3.238h5.414c-.218 1.39-1.636 4.074-5.414 4.074-3.259 0-5.918-2.67-5.918-5.963 0-3.291 2.66-5.962 5.918-5.962 1.855 0 3.096.782 3.805 1.457l2.59-2.47C14.278.932 12.124 0 9.546 0 4.268 0 0 4.223 0 9.443c0 5.221 4.268 9.444 9.545 9.444 5.51 0 9.164-3.831 9.164-9.228 0-.62-.068-1.092-.15-1.565H9.545zM30 8.094h-2.727V5.396h-2.727v2.698h-2.728v2.699h2.727v2.698h2.728v-2.698H30" clip-rule="evenodd"/>
+              </svg>
+            </a>
+  
+            <a class="social" (click)="login('facebook')">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="26" fill="none" viewBox="0 0 14 26">
+                  <path fill="#000" d="M9.013 8.667v-2.58c0-1.165.268-1.754 2.148-1.754h2.359V0H9.584C4.76 0 3.169 2.126 3.169 5.776v2.89H0V13h3.169v13h5.844V13h3.972l.535-4.333H9.013z"/>
+              </svg>
+            </a>
+  
+          </div>
+        </div>
+  
+        <hr />
+  
+        <div class="column is-11-mobile is-5-tablet">
+  
+        <form [formGroup]="signinForm" (submit)="loginViaDatabase()">
+          <div class="fields">
+            <input formControlName="email" id="email" placeholder="email" (keydown)="emailInput($event)" required />
+            <div *ngIf="siForm.email.invalid">
+              <span *ngIf="signInSubmitted && siForm.email.errors.required">Required.</span>
+              <span *ngIf="!errorForgot && signInSubmitted && siForm.email.errors.email">Please enter a valid email address.</span>
+              <span *ngIf="errorForgot"> Please provide a valid email address for password reset.</span>
+            </div>
+  
+            <input formControlName="password" id="password" placeholder="password" type="password" autocomplete="current-password" aria-autocomplete="none" required />
+            <div *ngIf="signInSubmitted && siForm.password.invalid">
+              <span *ngIf="siForm.password.errors.required">Required.</span>
+            </div>
+            <div class="note" *ngIf="errorMsg">{{errorMsg}}</div>
+  
+          </div>
+            <button class="mono" type="submit">Sign In</button>
+        </form>
+  
+        </div>
+  
+        <div class="lower column is-half">
+          <span>
+            Don’t have an account? <a href="#" (click)="toggleSignup()">Sign up.</a>
+          </span>
+        </div>
+        <div id="forgot" class="lower column">
+            <a href="#" (click)="forgot()" *ngIf="showForgot">Forgot password</a>
+            <span id="forgot-msg"></span>
+        </div>
+  
+      </div>
+  
+      <!-- SIGNUP -->
+      <div id="signup" class="columns is-mobile is-multiline" *ngIf="signUpShow">
+        <div class="column is-full-mobile is-5-tablet">
+  
+          <p>Sign up with Google or Facebook</p>
+  
+          <div class="social-login">
+  
+            <a class="social" (click)="login('google-oauth2')" *ngIf="!isAuthenticated">
+              <svg width="30" height="19" fill="none" viewBox="0 0 18 12">
+                <path fill="#000" fill-rule="evenodd"
+                  d="M5.727 4.857v1.942h3.248c-.13.834-.981 2.445-3.248 2.445-1.955 0-3.55-1.603-3.55-3.578 0-1.975 1.595-3.578 3.55-3.578 1.113 0 1.858.47 2.283.875L9.565 1.48C8.566.56 7.274 0 5.727 0 2.561 0 0 2.534 0 5.666c0 3.133 2.56 5.666 5.727 5.666 3.306 0 5.498-2.299 5.498-5.536 0-.373-.04-.656-.09-.94H5.728zM18 4.857h-1.636v-1.62h-1.637v1.62h-1.636v1.619h1.636v1.618h1.637V6.476H18"
+                  clip-rule="evenodd" />
+              </svg>
+            </a>
+  
+            <a class="social" (click)="login('facebook')" *ngIf="!isAuthenticated">
+              <svg width="14" height="26" fill="none" viewBox="0 0 8 16">
+                <path fill="#000"
+                  d="M5.333 5.128V3.602c0-.69.159-1.038 1.271-1.038H8V0H5.67C2.818 0 1.876 1.258 1.876 3.417v1.711H0v2.564h1.875v7.693h3.458V7.692h2.35L8 5.128H5.333z" />
+              </svg>
+            </a>
+  
+          </div>
+  
+        </div>
+  
+        <hr />
+  
+        <div class="column is-11-mobile is-5-tablet">
+  
+          <p>Sign up with email</p>
+  
+          <form [formGroup]="signupForm"
+            (submit)="signup()">
+            <div class="fields">
+  
+                <input formControlName="name" id="name" placeholder="name" required />
+                <div class="note" *ngIf="signUpSubmitted && suForm.name.invalid">Required.</div>
+  
+                <input formControlName="email" id="email" placeholder="email" required />
+                <div class="note" *ngIf="signUpSubmitted && suForm.email.invalid">
+                  <span *ngIf="suForm.email.errors.required">Required.</span>
+                  <span *ngIf="suForm.email.errors.email">Please enter a valid email address.</span>
+                </div>
+                <input formControlName="password" id="password" placeholder="password" type="password" autocomplete="current-password" aria-autocomplete="none" required />
+                <div class="note" *ngIf="signUpSubmitted && suForm.password.invalid">
+                  <span *ngIf="suForm.password.errors.required">Required.</span>
+                  <span *ngIf="suForm.password.errors.pattern">Your password must be at least 8 characters long and contain at least 3 of: special characters, lowercase letters, uppercase letters, or numbers.</span>
+                </div>
+            </div>
+              <button class="mono" type="submit">Create An Account</button>
+              <div *ngIf="alreadyExists">
+                This email address was registered previously. Please <a href="#" (click)="toggleSignup()">sign in</a>.
+              </div>
+  
+          </form>
+        </div>
+        <div class="lower column is-full">
+          <span>
+            Already have an account? <a href="#" (click)="toggleSignup()">Sign in.</a>
+          </span>
+        </div>
+  
+      </div>
+
+    </section>
