@@ -217,6 +217,7 @@ export class ProjectComponent implements OnInit {
 
   }
 
+  // Generate a PDF w/ project data
   public exportPdf() {
 
     // Get pdf pre-filled txt and all of this projects progress from API
@@ -263,9 +264,9 @@ export class ProjectComponent implements OnInit {
           doc.addImage(logoData, 'PNG', 10, 20, 50, 10);
 
           // Meetr intro/explanation text
-          let introArr = doc.splitTextToSize(intro, width - 60);
+          let introArr = doc.splitTextToSize(intro, width - 90);
           let explanationArr = doc.splitTextToSize(explanation, width - 60);
-          doc.setFontSize(20);
+          doc.setFontSize(25);
           doc.setFont('Roboto-Regular');
           doc.text(10, 50, introArr);
           
@@ -276,6 +277,7 @@ export class ProjectComponent implements OnInit {
           });
           
           // Explanation
+          doc.setFontSize(20);
           doc.text(10, globalYOffset, explanationArr);
           _.each(explanationArr, (d) => {
             globalYOffset += doc.getTextDimensions(d).h;
