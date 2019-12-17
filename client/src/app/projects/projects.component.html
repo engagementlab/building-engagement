@@ -6,7 +6,7 @@
 
   <div class="column">
 
-    <p id="none">You currently have no projects.</p>
+    <p id="none" *ngIf="noProjects">You currently have no projects.</p>
 
     <div class="new" *ngIf="projects && projects.length > 0">
       <button class="mono" routerLink="/create" *ngIf="projects">
