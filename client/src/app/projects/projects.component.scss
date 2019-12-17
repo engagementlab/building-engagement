@@ -12,7 +12,7 @@
   }
 }
 
-#new {
+.new {
   display: grid;
 
   grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
@@ -189,12 +189,4 @@
     }
   }
 
-}
-
-#modal {
-  max-width: 680px;
-
-  .fields {
-    width: 65%;
-  }
 }

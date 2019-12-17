@@ -1,0 +1,71 @@
+<section class="container desktop">
+
+
+  <form id="new-form" class="columns column is-multiline" [formGroup]="newForm" (submit)="submitNew()">
+
+    <div class="columns column is-full is-mobile">
+      <h2 class="column is-9 no-margin no-pad">Create a Project</h2>
+
+      <div id="close-btn" class="column">
+        <a routerLink="/projects">
+          <svg width="50" height="50" fill="none" viewBox="0 0 50 50">
+            <path stroke="#000" stroke-width="1" d="M11.414 11.586l27.577 28.991M40.406 11.121L11.414 38.699" />
+          </svg>
+        </a>
+      </div>
+    </div>
+
+    <div class="fields columns column is-full is-multiline is-mobile">
+      <div class="column is-half-desktop is-full-mobile">
+        <input formControlName="name" id="name" placeholder="Project Name" maxlength="{{nameLimit}}" type="text"
+          required (keyup)="countName($event)" />
+        <div *ngIf="nameCount > 0">{{nameCount}} / {{nameLimit}}</div>
+        <div *ngIf="projectSubmitted && f.name.invalid">
+          <span *ngIf="f.name.errors.required">Required.</span>
+        </div>
+
+        <textarea formControlName="description" id="description" placeholder="Project Description" rows="3"
+          maxlength="150" (keyup)="countDes($event)" required></textarea>
+        <div *ngIf="descCount > 0">{{descCount}} / {{descLimit}}</div>
+        <div *ngIf="projectSubmitted && f.description.invalid">
+          <span *ngIf="f.description.errors.required">Required.</span>
+        </div>
+      </div>
+
+      <div class="column is-offset-1-desktop">
+        <p class="no-margin">Set up a survey reminder (optional)</p>
+
+        <select id="interval" (change)="changeInterval($event)" formControlName="reminderInterval">
+          <option value="">Choose:</option>
+          <option *ngFor="let interval of reminderIntervals; let i = index;" value="{{i}}">{{interval}}</option>
+        </select>
+
+        <div *ngIf="f.reminderInterval.value !== ''">
+          <input class="enddate" type="datetime" placeholder="End date (optional)" formControlName="reminderEndDate"
+            [class.hidden]="f.reminderInterval.value === ''" />
+        </div>
+
+        <div *ngIf="f.reminderInterval.value !== ''">
+          <input formControlName="reminderEmail" id="email" type="email" placeholder="Email" />
+          <div *ngIf="projectSubmitted && f.reminderEmail.invalid">
+            <span *ngIf="f.reminderEmail.errors">Please enter a valid email.</span>
+          </div>
+          <div *ngIf="f.reminderInterval.value !== ''">
+            You will begin receiving reminders on {{reminderFirstDate}}
+          </div>
+          <span *ngIf="reminderEndDate">
+            Reminders will end on {{reminderEndDate | date: 'MMMM d, yyyy'}}.<br />
+          </span> 
+        </div>
+      </div>
+
+    </div>
+    <div class="column is-full">
+      <button class="mono no-pad" type="submit">Create</button>
+      <div *ngIf="projectSubmitted && errorMsg">
+        {{errorMsg}}
+      </div>
+    </div>
+  </form>
+
+</section>

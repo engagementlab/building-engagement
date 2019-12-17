@@ -19,8 +19,11 @@ import { MenuComponent } from './menu/menu.component';
 import { NavComponent } from './nav/nav.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { ProfileComponent } from './profile/profile.component';
+
 import { ProjectComponent } from './projects/project/project.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { ProjectNewComponent } from './projects/new/new.component';
+
 import { StudiesComponent } from './studies/studies.component';
 import { TrackComponent } from './projects/track/track.component';
 
@@ -62,7 +65,8 @@ export const config: CloudinaryConfiguration = cloudinaryConfiguration;
     NotFoundComponent,
     AdminComponent,
     AdminProjectComponent,
-    ActivityIntroComponent
+    ActivityIntroComponent,
+    ProjectNewComponent
   ],
   imports: [
     BrowserModule,

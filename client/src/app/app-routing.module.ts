@@ -3,8 +3,11 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { HomeComponent } from './home/home.component';
 import { AboutComponent } from './about/about.component';
+
 import { ProjectsComponent } from './projects/projects.component';
 import { ProjectComponent } from './projects/project/project.component';
+import { ProjectNewComponent } from './projects/new/new.component';
+
 import { TrackComponent } from './projects/track/track.component';
 import { ActivityComponent } from './activity/activity.component';
 import { StudiesComponent } from './studies/studies.component';
@@ -44,6 +47,11 @@ const routes: Routes = [
   {
     path: 'callback/oauth',
     component: CallbackComponent
+  },
+  {
+    path: 'create',
+    component: ProjectNewComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'projects',
