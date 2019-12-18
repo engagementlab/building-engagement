@@ -34,6 +34,7 @@ export class CallbackComponent implements OnInit {
     const targetRoute =
       result.appState && result.appState.target ? result.appState.target : '/projects';
     // Update observables
+    console.log(result)
 
     this.authService.isAuthenticated.next(await client.isAuthenticated());
     this.authService.profile.next(await client.getUser())

@@ -82,7 +82,7 @@
 <div id="getstarted" *ngIf="hasContent">
   <section class="container desktop">
     <h1>It’s easy to get started</h1>
-    <a class="mono uppercase" routerLink="/projects">Let's Go</a>
+    <a class="mono uppercase" [routerLink]="['/signup']" [queryParams]="{send:'/projects'}">Let's Go</a>
   </section>
 </div>
 

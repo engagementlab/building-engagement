@@ -4,6 +4,7 @@ import Auth0Client from '@auth0/auth0-spa-js/dist/typings/Auth0Client';
 
 import { AuthService } from '../utils/auth.service';
 import { DataService } from '../utils/data.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -17,9 +18,12 @@ export class SignupSigninComponent implements OnInit {
   public alreadyExists: boolean;
   public isAuthenticated: boolean;
   public errorForgot: boolean;
+  public signUpShow: boolean;
   public signUpSubmitted: boolean;
   public signInSubmitted: boolean;
   public showForgot: boolean = true;
+
+  private sendTo: string;
 
   private signupForm: FormGroup;
   private signinForm: FormGroup;
@@ -27,7 +31,9 @@ export class SignupSigninComponent implements OnInit {
   
   constructor(private authService: AuthService,
     private _dataSvc: DataService,
-    private _formBuilder: FormBuilder) {
+    private _formBuilder: FormBuilder,
+    private _route: ActivatedRoute,
+    private _router: Router) {
 
     this.signupForm = this._formBuilder.group({
       'name': ['', Validators.required],
@@ -43,14 +49,27 @@ export class SignupSigninComponent implements OnInit {
 
   async ngOnInit() {
 
+    // Get if in signup/signin mode
+    this._route.data.subscribe(d => this.signUpShow = d.signup);
+
     // Get an instance of the Auth0 client
     this.auth0Client = await this.authService.getAuth0Client();
 
     // Watch for changes to the isAuthenticated state
     this.authService.isAuthenticated.subscribe(value => {
       this.isAuthenticated = value;
+      // If user already signed in, route specified by 'send'.
+      // Will send to root if no 'send' param.
+      this._route.queryParams.subscribe(p => {
+        if(this.isAuthenticated)
+          this._router.navigateByUrl(p.send);
+        else if(Object.values(p).length > 0 && p.send) {
+          this.sendTo = p.send;
+        }
+      });
+      
     });
-
+    
   }
 
   /**
@@ -58,9 +77,20 @@ export class SignupSigninComponent implements OnInit {
    */
   async login(connectionType: string) {
 
-    let body = {
+    // If not authenticated, store 'send' param in nonced local object for use in callback
+    let nonce =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    let state = {};
+    // TODO: Expiry date
+   
+    if(this.sendTo) {
+      state[nonce] = {redir: this.sendTo};
+      sessionStorage.setItem('meetr_redir', JSON.stringify(state));
+    }
+
+    let body: RedirectLoginOptions = {
       connection: connectionType,
-      redirect_uri: `${window.location.origin}/callback`
+      redirect_uri: `${window.location.origin}/callback`,
+      appState: state
     };
 
     await this.auth0Client.loginWithRedirect(body);
