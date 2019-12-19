@@ -54,14 +54,14 @@ export class ProjectGrid {
         yLine.sendToBack();
 
         // Draw gridline labels along mid-x-axis
-        if (n === 1 || n === 4 || n === 7 || n === 9 || n === 12) {
-          let txt = '-7';
-          if (n === 4) txt = '-3';
+        if (n === 1 || n === 3 || n === 7 || n === 9 || n === 12) {
+          let txt = '-6';
+          if (n === 3) txt = '-3';
           else if (n === 7) txt = '0';
           else if (n === 9) txt = '3';
-          else txt = '7';
+          else txt = '6';
 
-          let offset = n === 7 ? -45 : -20;
+          let offset = (n === 1 || n === 7)? -45 : -20;
           label = new p.PointText({
             point: new p.Point(Math.ceil(n * boxW) + offset, (heightExt / 2) + 20),
             content: txt,
@@ -129,8 +129,9 @@ export class ProjectGrid {
         if (colorIndex === 3) colorIndex = -1;
         colorIndex++;
 
-        let xPos = (widthExt / 2) + ((survey.sumX / 2) * ((widthExt / 2) / 7)),
-          yPos = (heightExt / 2) - (survey.sumY / 2) * ((heightExt / 2) / 7);
+        // X = half canvas width, plus half of sumX, by factor of width of grid box
+        let xPos = (widthExt / 2) + ((survey.sumX / 2) * boxW),
+          yPos = (heightExt / 2) - ((survey.sumY / 2) * boxW);
 
         segments.push(new p.Point(xPos, yPos));
 
