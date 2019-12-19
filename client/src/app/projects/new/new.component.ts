@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
+import { environment } from '../../../environments/environment';
+
 import { DataService } from 'src/app/utils/data.service';
 
 import * as dateFormat from 'dateformat';
@@ -25,6 +27,7 @@ export class ProjectNewComponent implements OnInit {
   public reminderEndDate: string;
   public reminderIntervals: string[] = ['Every two weeks', 'Once a month', 'Every other month'];
 
+  public showTestReminderInterval: boolean;
   public projectSubmitted: boolean;
 
   public newForm: FormGroup;
@@ -35,6 +38,9 @@ export class ProjectNewComponent implements OnInit {
   constructor(private _dataSvc: DataService, private _formBuilder: FormBuilder, private _router: Router) { }
 
   ngOnInit() {
+
+    // Allow users to get daily reminder on non-prod
+    this.showTestReminderInterval = !environment.production;
 
     this.newForm = this._formBuilder.group({
       'name': ['', [Validators.required, Validators.maxLength(this.nameLimit)]],

@@ -36,6 +36,7 @@
 
         <select id="interval" (change)="changeInterval($event)" formControlName="reminderInterval">
           <option value="">Choose:</option>
+          <option value="3" *ngIf="showTestReminderInterval">Every day (QA only)</option>
           <option *ngFor="let interval of reminderIntervals; let i = index;" value="{{i}}">{{interval}}</option>
         </select>
 

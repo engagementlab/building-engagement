@@ -96,8 +96,8 @@ exports.find = async (req, res) => {
           return user.user_id.indexOf('facebook') > -1 || user.user_id.indexOf('google') > -1
       });
 
-      // User is found if response not '[]' (length > 1)
-      res.json({social: isSocial, exists: users.length > 1});
+      // User is found if response not '[]' (length > 0)
+      res.json({social: isSocial, exists: users.length > 0});
     });
   });
 
