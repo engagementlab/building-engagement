@@ -56,12 +56,17 @@ export class AuthService {
 
       // Provide the current value of isAuthenticated
       this.isAuthenticated.next(checkAuth);
+
+      // debugger
       
       // Whenever isAuthenticated changes, provide the current value of `getUser`, if profile not set
       this.isAuthenticated.subscribe(async isAuthenticated => {
         this.authCheckPending.next(false);
         
         if (isAuthenticated) {
+          // Refresh token
+          await this.auth0Client.getTokenSilently();
+          
           this.profile.next(await this.auth0Client.getUser());
           return;
         }
