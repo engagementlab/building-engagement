@@ -1,10 +1,13 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core'
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { DataService } from '../../utils/data.service';
 import { ProjectGrid } from '../../project-grid';
 import { SurveyPrompts } from '../../survey-prompts';
+
+import { environment } from '../../../environments/environment';
 
 import { TweenLite, TweenMax } from 'gsap';
 
@@ -13,7 +16,6 @@ import * as ismobile from 'ismobilejs';
 import * as jsPDF from 'jspdf';
 import * as dateformat from 'dateformat';
 import datepicker from 'js-datepicker';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-project',
@@ -33,11 +35,13 @@ export class ProjectComponent implements OnInit {
   public reminderIntervals: any = ['Every two weeks', 'Once a month', 'Every other month'];
 
   public hasContent: boolean;
-  public noProgress: boolean;
   public isPhone: boolean;
-  public showPrompt: boolean;
+  public noProgress: boolean;
   public reminderSubmitted: boolean;
   public reminderSet: boolean;
+  public showPrompt: boolean;
+  public showTestReminderInterval: boolean;
+
 
   public reminderNextDate: any;
 
@@ -75,6 +79,9 @@ export class ProjectComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    // Allow users to get daily reminder on non-prod
+    this.showTestReminderInterval = !environment.production;
 
     this._dataSvc.userId.subscribe(id => {
       if (id) {
@@ -167,6 +174,10 @@ export class ProjectComponent implements OnInit {
         break;
       case 2: 
         daysAhead = 62;
+        break;
+      case 3:
+        // Non-prod only 
+        daysAhead = 1;
         break;
     }
 

@@ -38,7 +38,7 @@ export class SignupSigninComponent implements OnInit {
     this.signupForm = this._formBuilder.group({
       'name': ['', Validators.required],
       'email': ['', [Validators.required, Validators.email]],
-      'password': ['', [Validators.required, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')]]
+      'password': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}')]]
     });
     this.signinForm = this._formBuilder.group({
       'email': ['', [Validators.required, Validators.email]],

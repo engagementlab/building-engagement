@@ -139,7 +139,7 @@
           <div class="note" *ngIf="signUpSubmitted && suForm.password.invalid">
             <span *ngIf="suForm.password.errors.required">Required.</span>
             <span *ngIf="suForm.password.errors.pattern">Your password must be at least 8 characters long and contain at
-              least 3 of: special characters, lowercase letters, uppercase letters, or numbers.</span>
+              least 1 of each: special character, lowercase letter, uppercase letter, and number.</span>
           </div>
         </div>
         <button class="mono" type="submit">Create An Account</button>
