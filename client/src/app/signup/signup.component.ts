@@ -28,7 +28,7 @@ export class SignupSigninComponent implements OnInit {
   private signupForm: FormGroup;
   private signinForm: FormGroup;
   private auth0Client: Auth0Client;
-  
+
   constructor(private authService: AuthService,
     private _dataSvc: DataService,
     private _formBuilder: FormBuilder,
@@ -43,8 +43,8 @@ export class SignupSigninComponent implements OnInit {
     this.signinForm = this._formBuilder.group({
       'email': ['', [Validators.required, Validators.email]],
       'password': ['', [Validators.required]]
-    }); 
-  
+    });
+
   }
 
   async ngOnInit() {
@@ -67,9 +67,9 @@ export class SignupSigninComponent implements OnInit {
           this.sendTo = p.send;
         }
       });
-      
+
     });
-    
+
   }
 
   /**
@@ -81,7 +81,7 @@ export class SignupSigninComponent implements OnInit {
     let nonce =  Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     let state = {};
     // TODO: Expiry date
-   
+
     if(this.sendTo) {
       state[nonce] = {redir: this.sendTo};
       sessionStorage.setItem('meetr_redir', JSON.stringify(state));
@@ -213,6 +213,11 @@ export class SignupSigninComponent implements OnInit {
 
     });
 
+  }
+
+  hideForgotMsg(event) {
+    document.getElementById('forgot-msg').innerText = '';
+    this.showForgot = true;
   }
 
   // convenience getter for easy access to form fields
