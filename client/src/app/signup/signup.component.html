@@ -52,7 +52,16 @@
 
       <form [formGroup]="signinForm" (submit)="loginViaDatabase()">
         <div class="fields">
-          <input formControlName="email" id="email" placeholder="email" (keydown)="emailInput($event)" autocomplete="email" aria-autocomplete="list" required />
+
+          <input
+            formControlName="email"
+            id="email"
+            placeholder="email"
+            (keydown)="hideForgotMsg($event)"
+            autocomplete="email"
+            aria-autocomplete="list"
+            required />
+
           <div *ngIf="siForm.email.invalid">
             <span *ngIf="signInSubmitted && siForm.email.errors.required">Required.</span>
             <span *ngIf="!errorForgot && signInSubmitted && siForm.email.errors.email">Please enter a valid email
@@ -65,19 +74,21 @@
           <div *ngIf="signInSubmitted && siForm.password.invalid">
             <span *ngIf="siForm.password.errors.required">Required.</span>
           </div>
+
           <div class="note" *ngIf="errorMsg">{{errorMsg}}</div>
 
         </div>
-        
-        <div class="columns is-mobile">        
-            <div class="column is-full-mobile is-half-tablet">
+
+        <div class="columns is-mobile">
+          <div class="column is-full-mobile is-half-tablet">
             <button class="mono" type="submit">Sign In</button>
+          </div>
+          <div id="forgot" class="lower column">
+            <a (click)="forgot()" *ngIf="showForgot">Forgot password</a>
+            <span id="forgot-msg"></span>
+          </div>
         </div>
-    <div id="forgot" class="lower column">
-      <a (click)="forgot()" *ngIf="showForgot">Forgot password</a>
-      <span id="forgot-msg"></span>
-    </div>
-    </div>
+
       </form>
 
     </div>
@@ -126,21 +137,44 @@
       <form [formGroup]="signupForm" (submit)="signup()">
         <div class="fields">
 
-          <input formControlName="name" id="name" placeholder="name" autocomplete="name" aria-autocomplete="list" required />
+          <input
+            formControlName="name"
+            id="name"
+            placeholder="name"
+            autocomplete="name"
+            aria-autocomplete="list"
+          required />
+
           <div class="note" *ngIf="signUpSubmitted && suForm.name.invalid">Required.</div>
 
-          <input formControlName="email" id="email" placeholder="email" autocomplete="email" aria-autocomplete="list" required />
+          <input
+            formControlName="email"
+            id="email"
+            placeholder="email"
+            autocomplete="email"
+            aria-autocomplete="list"
+          required />
+
           <div class="note" *ngIf="signUpSubmitted && suForm.email.invalid">
             <span *ngIf="suForm.email.errors.required">Required.</span>
             <span *ngIf="suForm.email.errors.email">Please enter a valid email address.</span>
           </div>
-          <input formControlName="password" id="password" placeholder="password" type="password"
-            autocomplete="current-password" aria-autocomplete="none" required />
+
+          <input
+            formControlName="password"
+            id="password"
+            placeholder="password"
+            type="password"
+            autocomplete="current-password"
+            aria-autocomplete="none"
+          required />
+
           <div class="note" *ngIf="signUpSubmitted && suForm.password.invalid">
             <span *ngIf="suForm.password.errors.required">Required.</span>
             <span *ngIf="suForm.password.errors.pattern">Your password must be at least 8 characters long and contain at
               least 1 of each: special character, lowercase letter, uppercase letter, and number.</span>
           </div>
+
         </div>
         <button class="mono" type="submit">Create An Account</button>
         <div *ngIf="alreadyExists">
