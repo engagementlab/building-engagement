@@ -294,25 +294,39 @@ export class ProjectComponent implements OnInit {
             globalYOffset += doc.getTextDimensions(d).h;
           });
           
+          /*
+           Project starts
+          */
+
+          // Add page and reset global offset
+          doc.addPage();
+          globalYOffset = 10;
+
           doc.setLineWidth(1.3);
-          doc.line(10, globalYOffset+10, width-20, globalYOffset+10, 'FD');
+          doc.line(10, globalYOffset, width-20, globalYOffset, 'FD');
           
           // Cleanup description so it doesn't overrun
           let descArr = doc.splitTextToSize(this.project.description.replace(/(\r\n|\n|\r)/gm, ' '), width - 60);
           
+          // Project name
+          globalYOffset += 30;
           doc.setFontSize(40)
           doc.setFont('Spectral-Bold');
-          doc.text(10, globalYOffset + 30, this.project.name);
-
+          doc.text(10, globalYOffset, this.project.name);
+          
+          // Project description
+          globalYOffset += 20;
           doc.setFontSize(20);
           doc.setFont('Roboto-Regular');
-          doc.text(10, globalYOffset + 50, descArr);
+          doc.text(10, globalYOffset, descArr);
 
-          // Add page and reset global offset
-          doc.addPage();
-          globalYOffset = 0;
+          _.each(descArr, (d) => {
+            globalYOffset += doc.getTextDimensions(d).h;
+          });
 
           // Draw all progress entries
+          doc.setLineWidth(.5);
+
           let prevNoteHeight = 0;
           let newPage = false;
           _.each(this.progress, (p: any, i: number) => {
@@ -361,10 +375,12 @@ export class ProjectComponent implements OnInit {
 
             }
 
-            // If approaching height of page, add a page and reset cumulative height
-            if((yOffset + prevNoteHeight) > (height+20)) {
+            // If approaching height of page and not last record, add a page and reset cumulative height
+            let cutoff = (yOffset + prevNoteHeight) > (height+20);
+            let notLast = i < this.progress.length-1;
+            if(cutoff && notLast) {
               doc.addPage();
-
+              
               newPage = true;
               globalYOffset = 0;
               prevNoteHeight = 0;

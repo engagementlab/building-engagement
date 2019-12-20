@@ -30,6 +30,7 @@ export class ProjectGrid {
 
       let tooltip: paper.PointText;
       let segments: paper.Point[] = [];
+      let mouseOverCurrent = {};
       let colors = ['#5a5c27', '#634da0', '#e85e5d', '#e9bbb0'];
       let colorIndex = -1;
 
@@ -158,6 +159,8 @@ export class ProjectGrid {
         g.addChildren([dot, txt]);
 
         g.onMouseEnter = (event) => {
+          console.log(i, mouseOverCurrent[i])
+          if(mouseOverCurrent[i]) return;
           // Layout the tooltip above the dot
           tooltip = new p.PointText({
             point: [event.target.position._x - 75, event.target.position._y - 15],
@@ -166,10 +169,12 @@ export class ProjectGrid {
             fontSize: 14
           });
           // g.scale(1.5);
+          mouseOverCurrent[i] = true;
         };
         g.onMouseLeave = () => {
           // g.scale(.75);
           tooltip.remove();
+          mouseOverCurrent[i] = false;
         };
         gLines.addChild(g)
 

@@ -17,10 +17,10 @@ var projectSchema = new Schema({
 	reminderEmail: {
 		type: String
 	},
-	/* 0 = 'Once a week', 
-	   1 = 'Every other week', 
-	   2 = 'Once a month', 
-	   3 = 'Every other month'
+	/* 0 = 'Every other week', 
+	   1 = 'Once a month', 
+	   2 = 'Every other month'
+	   3 = 'Every day' (non-production/testing only)
 	*/
 	reminderPeriod: {
 		type: Number

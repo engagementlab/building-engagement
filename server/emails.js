@@ -66,6 +66,10 @@ const SendEmail = async function () {
                 case 2:
                     send = daysSince >= 60;
                     break;
+                case 3:
+                    // 'Every day' (non-production/testing only)
+                    send = daysSince >= 1;
+                    break;
             }
 
             // If period not triggered, skip
