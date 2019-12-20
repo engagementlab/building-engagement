@@ -2,6 +2,7 @@ import { ElementRef } from '@angular/core';
 
 import * as paper from 'paper';
 import * as _ from 'underscore';
+import { TweenLite, TimelineLite, Expo } from 'gsap';
 
 export class ProjectGrid {
 
@@ -137,7 +138,7 @@ export class ProjectGrid {
         segments.push(new p.Point(xPos, yPos));
 
         let g: paper.Group = new p.Group();
-        let dot = new paper.Path.Circle({
+        let dot = new paper.Shape.Circle({
           center: [xPos, yPos],
           radius: 16,
           fillColor: colors[colorIndex]
@@ -149,34 +150,51 @@ export class ProjectGrid {
           fillColor: 'white',
           fontSize: 16
         });
+        let overlay = new paper.Path.Circle({
+          center: [xPos, yPos],
+          radius: 16,
+          fillColor: 'white',
+          opacity: 0
+        });
 
         // Can't reference bounds before txt is created so we center the text here.
         txt.point = new paper.Point(
           xPos - txt.bounds.width / 2,
           txt.point.y,
-        )
+        );
 
-        g.addChildren([dot, txt]);
+        // Layout the tooltip above the dot
+        let data = new p.PointText({
+          point: [xPos, yPos+5],
+          justification: 'center',
+          content: '(' + survey.sumX / 2 + ', ' + survey.sumY / 2 + ')',
+          fillColor: new p.Color(255, 255, 255, 1),
+          fontSize: 20,
+          fontStyle: 'italic',
+          opacity: 0
+        });
+
+        g.addChildren([dot, txt, data]);
 
         g.onMouseEnter = (event) => {
           console.log(i, mouseOverCurrent[i])
           if(mouseOverCurrent[i]) return;
-          // Layout the tooltip above the dot
-          tooltip = new p.PointText({
-            point: [event.target.position._x - 75, event.target.position._y - 15],
-            content: '( ' + survey.sumX / 2 + ', ' + survey.sumY / 2 + ' )',
-            fillColor: '#e85e5d',
-            fontSize: 14
-          });
-          // g.scale(1.5);
           mouseOverCurrent[i] = true;
         };
-        g.onMouseLeave = () => {
-          // g.scale(.75);
-          tooltip.remove();
-          mouseOverCurrent[i] = false;
+        gLines.addChild(g);
+
+        let anim;
+        overlay.onMouseEnter = (event) => {
+      
+          anim = new TimelineLite();
+          anim.to(dot, .6, {radius: '48', ease: Expo.easeInOut}, 'go');
+          anim.to(txt, .6, {opacity: 0}, 'go');
+          anim.to(data, .6, {opacity: 1}, 'go');
         };
-        gLines.addChild(g)
+        overlay.onMouseLeave = () => {
+          anim.reverse();
+        };
+        gLines.addChild(overlay);
 
       });
 
