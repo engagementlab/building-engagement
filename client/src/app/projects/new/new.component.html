@@ -21,6 +21,7 @@
         <div *ngIf="nameCount > 0">{{nameCount}} / {{nameLimit}}</div>
         <div *ngIf="projectSubmitted && f.name.invalid">
           <span *ngIf="f.name.errors.required">Required.</span>
+          <span *ngIf="f.name.errors.whitespace">Please enter at least 3 valid characters.</span>
         </div>
 
         <textarea formControlName="description" id="description" placeholder="Project Description" rows="3"

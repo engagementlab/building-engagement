@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
@@ -43,7 +43,7 @@ export class ProjectNewComponent implements OnInit {
     this.showTestReminderInterval = !environment.production;
 
     this.newForm = this._formBuilder.group({
-      'name': ['', [Validators.required, Validators.maxLength(this.nameLimit)]],
+      'name': ['', [Validators.required, Validators.minLength(3), Validators.maxLength(this.nameLimit), this.noWhitespaceValidator]],
       'description': ['', [Validators.required, Validators.maxLength(this.descLimit)]],
       'reminderEmail': ['', [Validators.email]],
       'reminderInterval': [''],
@@ -62,6 +62,7 @@ export class ProjectNewComponent implements OnInit {
 
     this.projectSubmitted = true;
 
+    console.log(this.newForm)
     if(!this.newForm.valid) return;
 
     let data = {
@@ -90,6 +91,12 @@ export class ProjectNewComponent implements OnInit {
       }
     });
 
+  }
+
+  public noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { 'whitespace': true };
   }
 
   public countName(evt) {
