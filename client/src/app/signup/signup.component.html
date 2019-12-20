@@ -178,7 +178,7 @@
         </div>
         <button class="mono" type="submit">Create An Account</button>
         <div *ngIf="alreadyExists">
-          This email address was registered previously. Please <a href="#" (click)="toggleSignup()">sign in</a>.
+          This email address was registered previously. Please <a routerLink="/signin">sign in</a>.
         </div>
 
       </form>
