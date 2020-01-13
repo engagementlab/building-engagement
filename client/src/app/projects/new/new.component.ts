@@ -23,6 +23,7 @@ export class ProjectNewComponent implements OnInit {
   public descCount: number;
 
   public errorMsg: string;
+  public explanationTxt: string;
   public reminderFirstDate: string;
   public reminderEndDate: string;
   public reminderIntervals: string[] = ['Every two weeks', 'Once a month', 'Every other month'];
@@ -48,6 +49,12 @@ export class ProjectNewComponent implements OnInit {
       'reminderEmail': ['', [Validators.email]],
       'reminderInterval': [''],
       'reminderEndDate': ['']
+    });
+
+    // Get new project intro txt
+    this._dataSvc.getDataForUrl('/api/data/get/new').subscribe((response: any) => {
+
+      this.explanationTxt = response[0].newProject;
     });
 
   }

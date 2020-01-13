@@ -50,6 +50,10 @@ var buildData = async (type, res) => {
         // Get activites intro (talk it out)
         data = activityIntro.findOne({}, activityIntroFields);
     } 
+    else if (type === 'new') {
+        // Get new project intro txt
+        data = about.findOne({}, 'newProject -_id');
+    } 
     else {
         
         // Get all studies
