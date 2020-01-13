@@ -80,8 +80,8 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
 
-    // Allow users to get daily reminder on non-prod
-    this.showTestReminderInterval = !environment.production;
+    // Allow users to get daily reminder on non-prod/qa
+    this.showTestReminderInterval = (environment.production && environment.qa) || (!environment.production && !environment.qa);
 
     this._dataSvc.userId.subscribe(id => {
       if (id) {
