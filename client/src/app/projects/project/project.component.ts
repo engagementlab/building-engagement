@@ -523,6 +523,10 @@ export class ProjectComponent implements OnInit {
       case 2: 
         delta = today.getDate() + 62;
         break;
+      // Non-prod only
+      case 3: 
+        delta = today.getDate() + 1;
+        break;
     }
 
     let min = new Date(new Date().setDate(delta));
