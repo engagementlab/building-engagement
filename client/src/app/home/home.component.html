@@ -20,57 +20,39 @@
 
   <section class="container desktop">
 
-    <div class="column columns is-mobile is-multiline is-11-mobile no-pad no-margin">
-      <!-- Project/how it works -->
+    <div class="columns is-multiline">
       <div class="column is-full-mobile is-half-tablet">
-
         <h1>This is how it works.</h1>
         <p class="desc" [innerHtml]="content.screen1.html"></p>
-
       </div>
-
-      <!-- STEP 1 -->
-      <div class="column is-full-mobile is-half-tablet">
-
-        <div class="header">
-          <div class="outline" data-text="1">1</div>
-          <div class="label">
-            Talk it Out
+      <div class="columns column">
+        <!-- Step 1 -->
+        <div class="column is-half-mobile">
+          <div class="header">
+            <div class="outline" data-text="1">1</div>
+            <div class="label">
+              Talk it Out
+            </div>
           </div>
+          <h3>
+            {{content.talk}}
+          </h3>
         </div>
-        <h3>
-          {{content.talk}}
-        </h3>
-      </div>
-      <div class="column">
 
-        <cdn-image cloudinaryPrefix="engagement-journalism/" cloudinaryId="img/home/talkitout" width="600"
-          [responsive]="true" autoFormat="true" alt="'Talk it out' image"></cdn-image>
+        <!-- Step 2 -->
+        <div class="column is-half-mobile">
+          <div class="header">
+            <div class="outline" data-text="2">2</div>
+            <div class="label">
+              Track Your Progress
+            </div>
+          </div>
+          <h3>
+            {{content.track}}
+          </h3>
+        </div>
       </div>
     </div>
-
-    <div id="step2" class="column columns is-mobile is-multiline is-11-mobile no-pad no-margin">
-
-      <!-- STEP 2 -->
-      <div class="column is-full-mobile is-half-tablet">
-        <cdn-image cloudinaryPrefix="engagement-journalism/" cloudinaryId="img/home/trackprogress" width="600"
-          [responsive]="true" autoFormat="true" alt="'Talk it out' image"></cdn-image>
-      </div>
-
-      <div class="column">
-
-        <div class="header">
-          <div class="outline" data-text="2">2</div>
-          <div class="label">
-            Track Your Progress
-          </div>
-        </div>
-        <h3>
-          {{content.track}}
-        </h3>
-      </div>
-    </div>
-
   </section>
 
 </div>

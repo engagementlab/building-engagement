@@ -16,6 +16,11 @@ h5 {
   margin: 40px 0 0;
 }
 
+p {
+  @include pxtoem(16, 20);
+  line-height: 2em;
+}
+
 #top {
 
   overflow: visible;
@@ -77,6 +82,10 @@ h5 {
     line-height: 1.8;
   }
 
+  h3 {
+    @include pxtoem(16, 20);
+  }
+
   .header {
 
     display: flex;
@@ -103,16 +112,6 @@ h5 {
         -webkit-text-stroke-color: $coral;
 
       }
-    }
-  }
-
-  #step2 {
-    margin-top: 10%;
-    margin-bottom: 10%;
-
-    @include phones {
-      margin-top: 5%;
-      flex-direction: column-reverse;
     }
   }
 }
@@ -147,11 +146,6 @@ h5 {
   h1 {
     @include pxtoem(26, 38);
     font-weight: 500;
-  }
-
-  p {
-    @include pxtoem(16, 20);
-    line-height: 2em;
   }
 
   a {
