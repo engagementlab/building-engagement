@@ -189,14 +189,22 @@ p {
 
   // To achieve one item per line, has to be UL in CMS
   ::ng-deep ul {
-    list-style: none;
+    list-style-type: none;
 
     margin: 0;
     padding: 0;
 
     li {
+      margin-bottom: 6pt;
+      padding-left: 6pt;
+
       @include pxtoem(12, 18);
       font-weight: 300;
+
+      &::before {
+        content: "\2013";  // en dash
+        margin-right: 6pt;
+      }
     }
   }
 
