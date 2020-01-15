@@ -12,7 +12,7 @@ const keystone = global.keystone;
 
 var buildData = async (type, res) => {
 
-    let homeFields = 'tagline screen1.html talk track why.html what.html -_id';
+    let homeFields = 'tagline screen1.html talk track visualize why.html what.html -_id';
     let aboutFields = 'intro para1 para2 what.html why.html guidePdf.url -_id';
     let aboutStudiesFields = 'caseStudiesIntro -_id';
     let aboutActivityFields = 'guidePdf.url -_id';
@@ -36,9 +36,9 @@ var buildData = async (type, res) => {
     else if (type === 'about') {
         // Get about
         data = about.findOne({}, aboutFields);
-    } 
+    }
     else if(type === 'activity') {
-        
+
         // Get all activities
         data = activity.find({}, activityFields).sort({order: 1});
         let fileData = about.findOne({}, aboutActivityFields);
@@ -49,19 +49,19 @@ var buildData = async (type, res) => {
     else if (type === 'activity-intro') {
         // Get activites intro (talk it out)
         data = activityIntro.findOne({}, activityIntroFields);
-    } 
+    }
     else if (type === 'new') {
         // Get new project intro txt
         data = about.findOne({}, 'newProject -_id');
-    } 
+    }
     else {
-        
+
         // Get all studies
         let introData = about.findOne({}, aboutStudiesFields);
         data = study.find({}, studiesFields);
 
         getRes.push(await introData.exec());
-        
+
     }
 
     try {
