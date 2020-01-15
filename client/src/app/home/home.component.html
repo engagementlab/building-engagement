@@ -28,10 +28,6 @@
         <h5 [innerHtml]="content.screen1.html"></h5>
 
       </div>
-      <div class="column">
-        <cdn-image cloudinaryPrefix="engagement-journalism/" cloudinaryId="img/home/grid" width="600"
-          [responsive]="true" autoFormat="true" alt="Sample project grid image"></cdn-image>
-      </div>
 
       <!-- STEP 1 -->
       <div class="column is-full-mobile is-half-tablet">
@@ -80,10 +76,37 @@
 </div>
 
 <div id="getstarted" *ngIf="hasContent">
-  <section class="container desktop">
-    <h1>It’s easy to get started</h1>
-    <a class="mono uppercase" [routerLink]="['/signup']" [queryParams]="{send:'/projects'}">Let's Go</a>
-  </section>
+  <div class="columns">
+    <div class="column">
+      <div class="visualize">
+        <h1>Visualize Engagement</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
+          magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+          pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+          laborum.</p>
+
+        <p><a
+          class=""
+          [routerLink]="['/signup']"
+          [queryParams]="{send:'/projects'}"
+          >Get Started</a></p>
+      </div>
+    </div>
+
+    <div class="column sampleGridContainer">
+      <div class="sampleGrid">
+        <cdn-image
+          cloudinaryPrefix="engagement-journalism/"
+          cloudinaryId="img/home/grid"
+          width="500"
+          autoFormat="true"
+          [responsive]="true"
+          alt="Sample project grid image">
+        </cdn-image>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="whywhat" *ngIf="hasContent">

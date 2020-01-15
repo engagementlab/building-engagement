@@ -34,11 +34,11 @@ h5 {
   }
 
   ::ng-deep img {
-    
+
     @include not-phones {
       position: absolute;
-    }    
-    
+    }
+
     @include mq($from: tabletPortrait) {
       margin-top: 24%;
       left: -6%;
@@ -120,7 +120,7 @@ h5 {
 
   padding: 9% 0;
 
-  text-align: center;
+  // text-align: center;
 
   background-image: cdn-image('img/speckled-bg', c_fill, f_auto, w_1440);
   background-size: cover;
@@ -129,13 +129,32 @@ h5 {
     background-image: cdn-image('img/speckled-bg', c_fill, f_auto, w_375);
   }
 
+  .visualize {
+    width: 80%;
+    margin: 0 auto;
+  }
+
+  .sampleGridContainer {
+    display: flex;
+  }
+
+  .sampleGrid {
+    width: 80%;
+    align-self: center;
+  }
+
   h1 {
-    font-family: 'Roboto', sans-serif;
+    @include pxtoem(26, 38);
     font-weight: 500;
   }
 
-  .mono {
-    @include pxtoem(24, 36);
+  p {
+    @include pxtoem(16, 20);
+    line-height: 2em;
+  }
+
+  a {
+    @include pxtoem(18, 22);
   }
 
 }
