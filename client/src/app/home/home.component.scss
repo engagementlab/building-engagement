@@ -21,6 +21,10 @@ p {
   line-height: 2em;
 }
 
+.container {
+  overflow: visible;
+}
+
 #top {
 
   overflow: visible;
@@ -68,7 +72,9 @@ p {
 #works {
 
   background-color: $pale-salmon-15;
+  
   padding-top: 22%;
+  padding-bottom: 7%;
 
   @include phones {
     margin-top: -20%;
@@ -86,6 +92,35 @@ p {
     @include pxtoem(16, 20);
   }
 
+  .img {
+    position: absolute;
+    max-width: 350px;
+    right: 0;
+    @include translate(30%, 155%);
+    
+    @include phones {
+      max-width: 200px;
+      @include translate(0%, -40%);
+    }
+    @include mq($from: tabletPortrait) {
+      max-width: 250px;
+      @include translate(0%, 387%);
+    }
+    @include mq($from: tabletPortrait, $and: '(orientation: landscape)') {
+      max-width: 250px;
+      @include translate(0%, 287%);
+    }
+  }
+
+  .desc {
+    font-size: 2em;
+    font-weight: 500;
+
+    @include phones {
+      font-size: 1.3em;
+    }
+  }
+
   .header {
 
     display: flex;
@@ -99,6 +134,10 @@ p {
     font-weight: 600;
     text-transform: uppercase;
 
+    @include phones {
+      min-height: 100px;
+    }
+
     div {
       position: absolute;
     }
@@ -110,7 +149,6 @@ p {
     .outline {
       &:before {
         -webkit-text-stroke-color: $coral;
-
       }
     }
   }
@@ -120,27 +158,11 @@ p {
 
   padding: 9% 0;
 
-  // text-align: center;
-
   background-image: cdn-image('img/speckled-bg', c_fill, f_auto, w_1440);
   background-size: cover;
 
   @include phones {
     background-image: cdn-image('img/speckled-bg', c_fill, f_auto, w_375);
-  }
-
-  .visualize {
-    width: 80%;
-    margin: 0 auto;
-  }
-
-  .sampleGridContainer {
-    display: flex;
-  }
-
-  .sampleGrid {
-    width: 80%;
-    align-self: center;
   }
 
   h1 {
@@ -150,6 +172,26 @@ p {
 
   a {
     @include pxtoem(18, 22);
+  }
+
+  .img {
+    position: absolute;
+    max-width: 350px;
+    right: 0;
+    @include translate(30%, 155%);
+    
+    @include phones {
+      max-width: 246px;
+      @include translate(0%, -18%);
+    }
+    @include mq($from: tabletPortrait) {
+      @include translate(-20%, -44%)
+    }
+  }
+
+  #grid {
+    display: flex;
+    align-items: center;
   }
 
 }

@@ -20,14 +20,14 @@
 
   <section class="container desktop">
 
-    <div class="columns is-multiline">
-      <div class="column is-full-mobile is-half-tablet">
+    <div class="columns column is-multiline">
+      <div class="column is-11-mobile is-full-tablet is-half-desktop">
         <h1>This is how it works.</h1>
         <p class="desc" [innerHtml]="content.screen1.html"></p>
       </div>
       <div class="columns column">
         <!-- Step 1 -->
-        <div class="column is-half-mobile">
+        <div class="column is-11-mobile">
           <div class="header">
             <div class="outline" data-text="1">1</div>
             <div class="label">
@@ -40,7 +40,7 @@
         </div>
 
         <!-- Step 2 -->
-        <div class="column is-half-mobile">
+        <div class="column">
           <div class="header">
             <div class="outline" data-text="2">2</div>
             <div class="label">
@@ -50,61 +50,64 @@
           <h3>
             {{content.track}}
           </h3>
+
+
         </div>
       </div>
+      <div class="img">
+        <cdn-image cloudinaryPrefix="engagement-journalism/" cloudinaryId="img/home/talkitout" width="550"
+          autoFormat="true" alt="'Take it out' artwork image"></cdn-image>
+      </div>
     </div>
+
   </section>
 
 </div>
 
 <div id="getstarted" *ngIf="hasContent">
-  <div class="columns">
-    <div class="column">
-      <div class="visualize">
+
+  <section class="container desktop">
+    <div class="columns column">
+      <div class="column is-5-desktop">
         <h1>Visualize Engagement</h1>
 
         <p>{{content.visualize}}</p>
 
-        <p><a
-          class=""
-          [routerLink]="['/signup']"
-          [queryParams]="{send:'/projects'}"
-          >Get Started</a></p>
+        <p><a [routerLink]="['/signup']" [queryParams]="{send:'/projects'}">Get started!</a></p>
       </div>
-    </div>
 
-    <div class="column sampleGridContainer">
-      <div class="sampleGrid">
-        <cdn-image
-          cloudinaryPrefix="engagement-journalism/"
-          cloudinaryId="img/home/grid"
-          width="500"
-          autoFormat="true"
-          [responsive]="true"
-          alt="Sample project grid image">
+      <div id="grid" class="column is-offset-1-desktop">
+        <cdn-image cloudinaryPrefix="engagement-journalism/" cloudinaryId="img/home/grid" width="500" autoFormat="true"
+          [responsive]="true" alt="Sample project grid image">
         </cdn-image>
       </div>
     </div>
-  </div>
+
+    <div class="img">
+      <cdn-image cloudinaryPrefix="engagement-journalism/" cloudinaryId="img/home/trackprogress" width="550"
+        autoFormat="true" alt="'Take it out' artwork image"></cdn-image>
+    </div>
+  </section>
+
 </div>
 
 <div id="whywhat" *ngIf="hasContent">
   <section class="container desktop">
-    <div class="column columns is-mobile is-multiline is-11-mobile no-pad no-margin">
-      <div class="column is-full-mobile is-4-tablet">
+    <div class="column columns is-multiline is-11-mobile no-pad no-margin">
+      <div class="column is-full-tablet is-4-desktop">
         <h4 class="no-margin">Why Meetr?</h4>
       </div>
 
-      <div class="column is-full-mobile is-7-tablet" [innerHtml]="content.why.html">
+      <div class="column is-7-desktop" [innerHtml]="content.why.html">
       </div>
 
-      <div class="column is-full-mobile is-4-tablet">
+      <div class="column is-full-mobile is-full-tablet is-4-desktop">
         <h4 class="no-margin">What is <strong>engaged journalism</strong>?</h4>
         <a class="mono uppercase hidden-mobile" routerLink="/about">
           Learn more
         </a>
       </div>
-      <div class="column is-full-mobile is-7-tablet" [innerHtml]="content.what.html">
+      <div class="column is-full-mobile is-7-desktop" [innerHtml]="content.what.html">
       </div>
 
       <div class="column is-full-mobile hidden-tablet-plus">
