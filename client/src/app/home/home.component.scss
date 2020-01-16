@@ -93,10 +93,8 @@ p {
 
   .img {
     position: absolute;
-    max-width: 350px;
     right: 0;
-    @include translate(30%, 155%);
-    
+
     @include phones {
       max-width: 200px;
       @include translate(0%, -40%);
@@ -108,6 +106,10 @@ p {
     @include mq($from: tabletPortrait, $and: '(orientation: landscape)') {
       max-width: 250px;
       @include translate(0%, 287%);
+    }
+    @include mq($from: wide) {
+      max-width: 350px;
+      @include translate(30%, 155%);
     }
   }
 
@@ -175,16 +177,20 @@ p {
 
   .img {
     position: absolute;
-    max-width: 350px;
-    right: 0;
-    @include translate(30%, 155%);
+    left: 0;
     
     @include phones {
       max-width: 246px;
-      @include translate(0%, -18%);
+      @include translate(60%, -18%);
     }
     @include mq($from: tabletPortrait) {
-      @include translate(-20%, -44%)
+      max-width: 350px;
+      @include translate(50%, -44%);
+    }
+    @include mq($from: wide) {
+      max-width: 350px;
+      @include translate(80%, -15%);
+      
     }
   }
 

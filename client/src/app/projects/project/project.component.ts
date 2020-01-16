@@ -391,12 +391,11 @@ export class ProjectComponent implements OnInit {
 
           });
 
+          // Add page just for grid image
           doc.addPage();
 
-          globalYOffset = 0;
-          console.log('globalYOffset', globalYOffset)
           // Add img under description
-          doc.addImage(canvasImg, 'PNG', 0, 50 + globalYOffset, width, width);
+          doc.addImage(canvasImg, 'PNG', 0, 50, width, width);
 
           // Page for prompts
           doc.addPage();
