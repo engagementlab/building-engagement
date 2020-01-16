@@ -393,6 +393,8 @@ export class ProjectComponent implements OnInit {
 
           doc.addPage();
 
+          globalYOffset = 0;
+          console.log('globalYOffset', globalYOffset)
           // Add img under description
           doc.addImage(canvasImg, 'PNG', 0, 50 + globalYOffset, width, width);
 
