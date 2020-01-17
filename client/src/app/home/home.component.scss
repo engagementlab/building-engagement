@@ -107,7 +107,15 @@ p {
       max-width: 250px;
       @include translate(0%, 287%);
     }
-    @include mq($from: wide) {
+    @include mq($from: 860px, $until: 1024px) {
+      max-width: 295px;
+      @include translate(-25%, 300%);
+    }
+    @include mq($from: 1300px, $until: 1400px) {
+      max-width: 320px;
+      @include translate(25%, 190%);
+    }
+    @include mq($from: 1401px) {
       max-width: 350px;
       @include translate(30%, 155%);
     }
@@ -180,8 +188,12 @@ p {
     left: 0;
     
     @include phones {
+      max-width: 190px;
+      @include translate(73%, -18%);
+    }
+    @include mq($from: mobileLg) {
       max-width: 246px;
-      @include translate(60%, -18%);
+      @include translate(68%, -20%);
     }
     @include mq($from: tabletPortrait) {
       max-width: 350px;
