@@ -42,7 +42,6 @@ export class ProjectComponent implements OnInit {
   public showPrompt: boolean;
   public showTestReminderInterval: boolean;
 
-
   public reminderNextDate: any;
 
   public reminderForm: FormGroup;
