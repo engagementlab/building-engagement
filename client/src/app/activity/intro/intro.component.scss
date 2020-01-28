@@ -1,0 +1,31 @@
+@import '~src/style/_variables';
+
+.intro {
+
+    h2 {
+        margin-bottom: 0;
+
+        @include not-phones {
+            margin-top: 0;
+        }
+    }
+
+    h3 {
+        @include pxtoem(18, 24);
+
+        margin-top: 0.2em;
+    }
+
+    h2, h3 {
+        font-weight: normal;
+    }
+
+    p {
+        @include pxtoem(12, 18);
+    }
+
+    .bottom {
+        @include pxtoem(18, 24);
+    }
+    
+}

@@ -1,0 +1,67 @@
+@import '~src/style/_variables';
+
+#login {
+    padding: 7%;
+    background-color: #fdf5f3;
+  
+    #close-btn {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+
+    #signin {
+        line-height: 1.5;
+
+        #forgot {
+            display: flex;
+            align-items: flex-end;
+            justify-content: flex-end;
+        }
+    }
+
+    a.social {
+        display: inline-flex;
+        cursor: pointer;
+
+        justify-content: center;
+        align-items: center;
+
+        width: 75px;
+        height: 75px;
+
+        @include phones {
+            width: 50px;
+            height: 50px;
+        }
+
+        border: solid 1px #000000;
+        border-radius: 50px;
+
+        background-color: white;
+    }
+    
+    .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    
+    .lower a {
+        font-weight: 700;
+    }
+
+    .social-login {
+        display: flex;
+        justify-content: space-evenly;
+
+        margin-top: 7%;
+        margin-bottom: 12%;
+
+        @include phones {
+            margin-bottom: 0;
+        }
+    }
+
+  }

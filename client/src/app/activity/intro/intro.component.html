@@ -1,0 +1,22 @@
+<div class="container" *ngIf="hasContent">
+  <section class="section columns column is-multiline intro">
+    <div class="column is-full">
+      <h2>Talk It Out</h2>
+    </div>
+    <div class="column">
+      <h3>Introduction</h3>
+      <p [innerHtml]="content"></p>
+    </div>
+
+    <!-- Empty -->
+    <div class="column is-full-mobile is-one-third"></div>
+
+    <div class="bottom mono uppercase column is-full">
+      <div>
+        <a [routerLink]="(projectKey === undefined) ? '/talk/activity' : '/talk/activity/' + projectKey">
+          <span>Start</span>
+        </a>
+      </div>
+    </div>
+  </section>
+</div>

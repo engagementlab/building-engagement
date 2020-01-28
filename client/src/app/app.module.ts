@@ -5,32 +5,42 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HomeComponent } from './home/home.component';
-import { NavComponent } from './nav/nav.component';
+
+// Components
+import { AboutComponent } from './about/about.component';
+import { ActivityComponent } from './activity/activity.component';
+import { ActivityIntroComponent } from './activity/intro/intro.component';
+import { AdminComponent } from './admin/admin.component';
+import { AdminProjectComponent } from './admin/project/project.component';
 import { CallbackComponent } from './utils/callback/callback.component';
-import { ProfileComponent } from './profile/profile.component';
+import { FooterComponent } from './footer/footer.component';
+import { HomeComponent } from './home/home.component';
 import { MenuComponent } from './menu/menu.component';
+import { NavComponent } from './nav/nav.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+import { ProfileComponent } from './profile/profile.component';
+
+import { ProjectComponent } from './projects/project/project.component';
 import { ProjectsComponent } from './projects/projects.component';
+import { ProjectNewComponent } from './projects/new/new.component';
+
+import { StudiesComponent } from './studies/studies.component';
 import { TrackComponent } from './projects/track/track.component';
 
-import { DataService } from './utils/data.service';
-import { CdnImageComponent } from './utils/cdn-image/cdn-image.component';
+import { SignupSigninComponent } from './signup/signup.component';
 
 import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ProjectComponent } from './projects/project/project.component';
 
 // Cloudinary
 import { Cloudinary as CloudinaryCore } from 'cloudinary-core';
 import { CloudinaryConfiguration, CloudinaryModule } from '@cloudinary/angular-5.x';
 import cloudinaryConfiguration from './cdn.config';
-import { FooterComponent } from './footer/footer.component';
-import { AboutComponent } from './about/about.component';
-import { ActivityComponent } from './activity/activity.component';
+
+import { CdnImageComponent } from './utils/cdn-image/cdn-image.component';
+import { DataService } from './utils/data.service';
 import { SanitizeHtmlPipe } from './utils/sanitize-html.pipe';
 
 import { CarouselModule } from 'ngx-owl-carousel-o';
-import { StudiesComponent } from './studies/studies.component';
-import { NotFoundComponent } from './not-found/not-found.component';
 
 export const cloudinary = {
   Cloudinary: CloudinaryCore
@@ -54,7 +64,12 @@ export const config: CloudinaryConfiguration = cloudinaryConfiguration;
     ActivityComponent,
     SanitizeHtmlPipe,
     StudiesComponent,
-    NotFoundComponent
+    NotFoundComponent,
+    AdminComponent,
+    AdminProjectComponent,
+    ActivityIntroComponent,
+    ProjectNewComponent,
+    SignupSigninComponent
   ],
   imports: [
     BrowserModule,

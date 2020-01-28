@@ -14,6 +14,23 @@ var projectSchema = new Schema({
 		type: String,
 		required: true,
     },
+	reminderEmail: {
+		type: String
+	},
+	/* 0 = 'Every other week', 
+	   1 = 'Once a month', 
+	   2 = 'Every other month'
+	   3 = 'Every day' (non-production/testing only)
+	*/
+	reminderPeriod: {
+		type: Number
+	},
+	lastReminderDate: {
+		type: Date
+	},
+	reminderEndDate: {
+		type: Date
+	},
     user: {
 		type: Schema.Types.ObjectId,
 		ref: 'AppUser'

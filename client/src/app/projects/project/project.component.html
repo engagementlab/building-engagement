@@ -7,7 +7,7 @@
     <div class="column is-11-mobile is-full-tablet">
 
       <div id="prompt" class="columns is-multiline is-mobile" *ngIf="showPrompt">
-        <div class="column is-full-mobile is-10-tablet">
+        <div class="column is-full-mobile is-9-tablet">
           It’s been 30 days since your last entry. Want to track your progress?
         </div>
         <div class="column">
@@ -20,9 +20,54 @@
 
     <div id="top" class="column columns is-full is-mobile is-multiline">
       <h4 class="column is-11-mobile is-5-tablet no-margin">{{project.name}}</h4>
-      <p class="column is-8-mobile is-6-tablet">
-        {{project.description}}
-      </p>
+      <div class="column is-8-mobile is-6-tablet">
+        <p>
+          {{project.description}}
+        </p>
+
+        <div id="reminder">
+          <span *ngIf="reminderSet && reminderNextDate">
+            Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}}.<br/>
+            <span *ngIf="reminderEndDate">
+              Reminders will end on {{reminderEndDate | date: 'MM/dd/yyyy'}}.<br />
+            </span> 
+            (<a (click)="promptCancelReminder()">Cancel
+              reminders</a>)
+          </span>
+          <span *ngIf="!reminderSet">
+            You currently have no reminder set. (<a (click)="openReminder()">Set reminder</a>)
+          </span>
+
+          <form id="reminder-form" class="fields" [formGroup]="reminderForm" (submit)="setReminder()">
+
+            <select id="interval" (change)="changeInterval($event)" formControlName="reminderInterval" required>
+              <option value="">No reminder</option>
+              <option value="3" *ngIf="showTestReminderInterval">Every day (QA only)</option>
+              <option *ngFor="let interval of reminderIntervals; let i = index;" value="{{i}}">{{interval}}</option>
+            </select>
+
+            <br />
+            
+            <input class="enddate" type="datetime" placeholder="End date (optional)" formControlName="reminderEndDate" 
+            [class.hidden]="reminderForm.controls.reminderInterval.value === ''" />
+            
+            <br />
+            
+            <input formControlName="reminderEmail" id="email" type="email" placeholder="Reminder Email" required
+              *ngIf="reminderForm.controls.reminderInterval.value !== ''" />
+            <div *ngIf="reminderSubmitted && reminderForm.controls.reminderEmail.invalid">
+              <span *ngIf="reminderForm.controls.reminderEmail.errors">Please enter a valid email.</span>
+            </div>
+
+            <div *ngIf="reminderForm.controls.reminderInterval.value !== ''">
+              You will begin receiving reminders on {{reminderFirstDate}}
+            </div>
+
+            <button class="mono no-pad" type="submit">Set</button>
+
+          </form>
+        </div>
+      </div>
 
       <!-- empty for layout purposes -->
       <div class="column is-5-tablet hidden-mobile"></div>
@@ -53,30 +98,29 @@
         <a routerLink="/projects/{{project.slug}}/track" class="mono uppercase">2 Track your Progress</a>
       </div>
 
-
     </div>
 
     <!-- Have progress -->
     <div class="columns column is-full is-mobile is-multiline" *ngIf="progress && progress.length > 0">
 
-        <a id="pdf" class="column is-5-tablet hidden-mobile" (click)="exportPdf()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="78" height="81" fill="none" viewBox="0 0 78 81">
-              <path stroke="#000" stroke-miterlimit="10" d="M60.423 20.423H40.5V.5" />
-              <path fill="#000" stroke="#000" stroke-miterlimit="10"
-                d="M12.913 40.5v6.743H12.3V31.305h4.904c1.686 0 2.912.46 3.832 1.226.92.766 1.38 1.992 1.38 3.371 0 1.38-.46 2.606-1.38 3.372-.92.766-2.146 1.226-3.678 1.226h-4.445zm0-.613h4.291c1.38 0 2.606-.306 3.372-1.073.766-.613 1.226-1.685 1.226-2.912 0-1.226-.46-2.298-1.226-2.912-.766-.766-1.839-1.072-3.372-1.072h-4.29v7.97zM25.632 47.09V31.305h4.445c1.226 0 2.299.306 3.371.92.92.612 1.84 1.379 2.3 2.451.612 1.073.919 2.146.919 3.525v1.993c0 1.379-.307 2.452-.767 3.524a7.094 7.094 0 0 1-2.298 2.453c-.92.613-2.146.92-3.372.92h-4.598zm.613-15.172v14.56h3.832c1.073 0 2.145-.307 3.065-.767.92-.613 1.686-1.226 2.145-2.299.46-.92.767-1.992.767-3.218V38.2a7.123 7.123 0 0 0-.767-3.218c-.46-.92-1.225-1.686-2.145-2.299-.92-.613-1.84-.766-2.912-.766h-3.985zM48.928 39.427h-8.123v7.816h-.613V31.305H50v.613h-9.195v6.896h8.123v.613z" />
-              <path stroke="#000" stroke-miterlimit="10"
-                d="M60.423 80.5c9.226 0 16.705-7.48 16.705-16.705 0-9.226-7.48-16.705-16.705-16.705-9.226 0-16.705 7.48-16.705 16.705 0 9.226 7.479 16.705 16.705 16.705zM60.422 73.757V53.833" />
-              <path stroke="#000" stroke-miterlimit="10" d="M50.462 63.795l9.961 9.962 10.115-9.962M50.462 73.757h20.076" />
-              <path stroke="#000" stroke-miterlimit="10"
-                d="M43.872 63.795c0-9.195 7.51-16.705 16.705-16.705V20.423L40.653.5H.5v80h59.923c-9.195 0-16.551-7.51-16.551-16.705z" />
-            </svg>
-          </a>
+      <a id="pdf" class="column is-5-tablet hidden-mobile" (click)="exportPdf()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="78" height="81" fill="none" viewBox="0 0 78 81">
+          <path stroke="#000" stroke-miterlimit="10" d="M60.423 20.423H40.5V.5" />
+          <path fill="#000" stroke="#000" stroke-miterlimit="10"
+            d="M12.913 40.5v6.743H12.3V31.305h4.904c1.686 0 2.912.46 3.832 1.226.92.766 1.38 1.992 1.38 3.371 0 1.38-.46 2.606-1.38 3.372-.92.766-2.146 1.226-3.678 1.226h-4.445zm0-.613h4.291c1.38 0 2.606-.306 3.372-1.073.766-.613 1.226-1.685 1.226-2.912 0-1.226-.46-2.298-1.226-2.912-.766-.766-1.839-1.072-3.372-1.072h-4.29v7.97zM25.632 47.09V31.305h4.445c1.226 0 2.299.306 3.371.92.92.612 1.84 1.379 2.3 2.451.612 1.073.919 2.146.919 3.525v1.993c0 1.379-.307 2.452-.767 3.524a7.094 7.094 0 0 1-2.298 2.453c-.92.613-2.146.92-3.372.92h-4.598zm.613-15.172v14.56h3.832c1.073 0 2.145-.307 3.065-.767.92-.613 1.686-1.226 2.145-2.299.46-.92.767-1.992.767-3.218V38.2a7.123 7.123 0 0 0-.767-3.218c-.46-.92-1.225-1.686-2.145-2.299-.92-.613-1.84-.766-2.912-.766h-3.985zM48.928 39.427h-8.123v7.816h-.613V31.305H50v.613h-9.195v6.896h8.123v.613z" />
+          <path stroke="#000" stroke-miterlimit="10"
+            d="M60.423 80.5c9.226 0 16.705-7.48 16.705-16.705 0-9.226-7.48-16.705-16.705-16.705-9.226 0-16.705 7.48-16.705 16.705 0 9.226 7.479 16.705 16.705 16.705zM60.422 73.757V53.833" />
+          <path stroke="#000" stroke-miterlimit="10" d="M50.462 63.795l9.961 9.962 10.115-9.962M50.462 73.757h20.076" />
+          <path stroke="#000" stroke-miterlimit="10"
+            d="M43.872 63.795c0-9.195 7.51-16.705 16.705-16.705V20.423L40.653.5H.5v80h59.923c-9.195 0-16.551-7.51-16.551-16.705z" />
+        </svg>
+      </a>
       <div id="all" class="column is-full-mobile">
         <hr id="all-hr1" />
         <div class="columns is-mobile" *ngFor="let entry of progress; let i = index;">
           <div class="column is-1">
             <span class="num mono">
-              {{progress.length - i}}
+              {{i+1}}
             </span>
           </div>
           <div class="column is-2">
@@ -99,18 +143,25 @@
       <div class="center">
         <canvas #canvasElement id="canvas" height="680" width="680"></canvas>
       </div>
-      
+
       <div class="bottom mono columns">
-        <a class="column" routerLink="/projects" *ngIf="progress">
+
+        <a class="column is-half" routerLink="/projects" *ngIf="progress">
           <svg width="54" height="42" fill="none" viewBox="0 0 54 42">
-            <path stroke="#000" d="M54 20.405H.717M21.671 41.569L.358 20.256"/>
-            <path stroke="#000" stroke-width="1.01239" d="M21.671.358L.358 21.67"/>
-        </svg>
-        
+            <path stroke="#000" d="M54 20.405H.717M21.671 41.569L.358 20.256" />
+            <path stroke="#000" stroke-width="1.01239" d="M21.671.358L.358 21.67" />
+          </svg>
+
           <span>Back to Projects</span>
         </a>
-        </div>
+
+        <a id="delete" class="column" routerLink="/projects/{{projectId}}" (click)="promptDelete()">
+          Delete this Project
+        </a>
+      </div>
+
     </div>
+
   </div>
 
   <!-- No progress -->
@@ -196,6 +247,12 @@
 
       <p>You currently have no data.</p>
 
+    </div>
+
+    <div class="bottom mono columns">
+      <a class="column" routerLink="/projects/{{projectId}}" (click)="promptDelete()">
+        Delete this Project
+      </a>
     </div>
 
   </div>

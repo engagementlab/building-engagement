@@ -1,5 +1,10 @@
 @import '~src/style/_variables';
 
+h3 {
+  font-weight: 300;
+  font-size: 1.1em;
+}
+
 #top {
   margin: 3em 0;
 
@@ -12,7 +17,7 @@
   }
 }
 
-#new {
+.new {
   display: grid;
 
   grid-template-columns: repeat(auto-fit, minmax(40%, 1fr));
@@ -121,7 +126,6 @@
     }
 
     .name, .desc {
-      word-break: break-all;
       overflow-wrap: break-word;
       hyphens: auto;
     }
@@ -189,12 +193,4 @@
     }
   }
 
-}
-
-#modal {
-  max-width: 680px;
-
-  .fields {
-    width: 65%;
-  }
 }

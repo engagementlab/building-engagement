@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 
 import { DataService } from '../utils/data.service';
 import { AuthService } from '../utils/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -14,21 +12,14 @@ import { Router } from '@angular/router';
 export class ProjectsComponent implements OnInit {
 
   public userName: string;
-  public errorMsg: string;
-
-  public descLimit: number = 150;
-  public descCount: number;
 
   public profile: any;
   public projects: any[]
 
   public hasContent: boolean;
   public noProjects: boolean;
-  public projectSubmitted: boolean;
 
-  public newForm: FormGroup;
-
-  constructor(private _dataSvc: DataService, private _authSvc: AuthService, private _formBuilder: FormBuilder, private _router: Router) {}
+  constructor(private _dataSvc: DataService, private _authSvc: AuthService, private _router: Router) {}
 
   async ngOnInit() {
 
@@ -44,84 +35,24 @@ export class ProjectsComponent implements OnInit {
     let userId = this._dataSvc.userId.getValue();
     if(userId)
       this.getProjects(userId)
-    else 
+    else
     {
       this._dataSvc.userId.subscribe(id => {
         if(id) this.getProjects(id);
       });
     }
-
-    this.newForm = this._formBuilder.group({
-      'name': ['', [Validators.required]],
-      'description': ['', [Validators.required]]
-    });
-  }
-
-  // convenience getter for easy access to form fields
-  get f() {
-    return this.newForm.controls;
   }
 
   getProjects(userId) {
 
     this._dataSvc.getDataForUrl('/api/project/get/' + userId).subscribe((response: any) => {
-        
+
       this.projects = response;
       this.hasContent = true;
       this.noProjects = !this.projects || this.projects.length === 0;
 
     });
-  
-  }
 
-  create() {
-
-    document.getElementById('new-modal').style.display = 'flex';
-    document.body.classList.value = '';
-
-  }
-
-  submitNew() {
-
-    this.projectSubmitted = true;
-
-    if(!this.newForm.valid) return;
-
-    let data = {
-      name: this.f['name'].value,
-      description: this.f['description'].value,
-      userId: this._dataSvc.userId.getValue()
-    }
-
-    this._dataSvc.sendDataToUrl('/api/project/create', data).subscribe((response: any) => {
-      
-      // Hide modal
-      document.getElementById('new-modal').style.display = 'none';
-      document.body.classList.value = 'white';
-      this.projects.push(response);
-
-      // Go to new project
-      this._router.navigate(['projects', response.slug]);
-      
-    },
-    (err: HttpErrorResponse) => {
-      if(err.status === 409)
-        this.errorMsg = 'You already have a project with that name';
-    });
-
-  }
-
-  closeModal() { 
-
-    document.getElementById('new-modal').style.display = 'none';
-    document.body.classList.value = 'white';
-
-  }
-
-  public countDes(evt) {
-
-    this.descCount = (evt.target as HTMLTextAreaElement).value.length;
-  
   }
 
 }

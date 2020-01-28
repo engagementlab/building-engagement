@@ -8,8 +8,10 @@
 
     <p id="none" *ngIf="noProjects">You currently have no projects.</p>
 
-    <div class="" id="new" *ngIf="projects && projects.length > 0">
-      <button class="mono" (click)="create()" *ngIf="projects">
+    <h3 *ngIf="noProjects">Get started by naming and briefly describing a project you are planning or currently working on that involves community engagement. Creating a Project will allow you to track your progress on that individual project.  You can create more than one Project.</h3>
+
+    <div class="new" *ngIf="projects && projects.length > 0">
+      <button class="mono" routerLink="/create" *ngIf="projects">
         <svg width="30" height="30" fill="none" viewBox="0 0 30 30">
           <path stroke="#fff" d="M30 14.5H0M14.499 0v30" />
         </svg>
@@ -22,53 +24,16 @@
 
     </div>
 
-    <!-- Form for first project -->
-    <div id="first" class="columns column is-full is-mobile is-multiline" *ngIf="noProjects">
+    <!-- Button for first project -->
+    <div class="new" *ngIf="noProjects">
 
-      <h4 class="column is-full">Create Your First Project</h4>
+      <button class="mono" routerLink="/create">
+        <svg width="30" height="30" fill="none" viewBox="0 0 30 30">
+          <path stroke="#fff" d="M30 14.5H0M14.499 0v30" />
+        </svg>
 
-      <form id="new-form" class="columns column is-full is-multiline is-mobile" [formGroup]="newForm"
-        (submit)="submitNew()">
-        <div class="fields column is-half no-pad">
-          <div class="column is-full">
-            <input formControlName="name" id="name" placeholder="Project Name" required />
-            <div *ngIf="projectSubmitted && f.name.invalid">
-              <span *ngIf="f.name.errors.required">Required.</span>
-            </div>
-          </div>
-          <div class="column is-full">
-            <textarea formControlName="description" id="description" placeholder="Project Description" rows="5"
-              maxlength="150" required (keyup)="countDes($event)"></textarea>
-            <div *ngIf="descCount > 0">{{descCount}} / {{descLimit}}</div>
-            <div *ngIf="projectSubmitted && f.description.invalid">
-              <span *ngIf="f.description.errors.required">Required.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="column" id="right">
-
-          <button class="mono no-pad" type="submit">
-
-            <svg xmlns="http://www.w3.org/2000/svg" width="218" height="165" fill="none" viewBox="0 0 218 165">
-              <path fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width="2"
-                d="M217 145H1V1h72l27 27h117v117z" />
-              <path fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width="2"
-                d="M82 10h126v18H100L82 10zM86.5 104.5l-29.2-5.8L80.7 87l-.4-23 17.9 17.2 23.3-11.7-11.7 23.3 17.2 17.9-23-.4-11.7 23.4-5.8-29.2z" />
-              <path fill="#fff" stroke="#000" stroke-miterlimit="10" stroke-width="2"
-                d="M86.5 104.5l-7.8-1.5-50.5 50.7 9.3 9.3L88 112.3l-1.5-7.8zM46 82a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM104.5 55a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9zM122.5 136a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9z" />
-              <path stroke="#000" stroke-miterlimit="10" stroke-width="2"
-                d="M64 28v18M55 37h18M140.5 73v27M127 86.5h27" />
-            </svg>
-
-            Create Project
-
-          </button>
-          <div *ngIf="projectSubmitted && errorMsg">
-            {{errorMsg}}
-          </div>
-        </div>
-      </form>
+        <span>Create Your First Project</span>
+      </button>
 
     </div>
 
@@ -119,46 +84,3 @@
   </div>
 
 </section>
-
-<div id="new-modal" class="modal-wrapper">
-  <div id="modal" class="modal">
-
-    <div class="columns is-mobile">
-      <h2 class="column is-9">Create a Project</h2>
-
-      <div id="close-btn" class="column">
-        <a (click)="closeModal()">
-          <svg width="50" height="50" fill="none" viewBox="0 0 50 50">
-            <path stroke="#000" stroke-width="1" d="M11.414 11.586l27.577 28.991M40.406 11.121L11.414 38.699" />
-          </svg>
-        </a>
-      </div>
-    </div>
-
-    <form id="new-form" class="columns column is-multiline" [formGroup]="newForm" (submit)="submitNew()">
-      <div class="fields">
-        <div class="column is-full">
-          <input formControlName="name" id="name" placeholder="Project Name" required />
-          <div *ngIf="projectSubmitted && f.name.invalid">
-            <span *ngIf="f.name.errors.required">Required.</span>
-          </div>
-        </div>
-        <div class="column is-full">
-          <textarea formControlName="description" id="description" placeholder="Project Description" rows="5"
-            maxlength="150" (keyup)="countDes($event)" required></textarea>
-          <div *ngIf="descCount > 0">{{descCount}} / {{descLimit}}</div>
-          <div *ngIf="projectSubmitted && f.description.invalid">
-            <span *ngIf="f.description.errors.required">Required.</span>
-          </div>
-        </div>
-      </div>
-      <div class="column is-full">
-        <button class="mono no-pad" type="submit">Create Project</button>
-        <div *ngIf="projectSubmitted && errorMsg">
-          {{errorMsg}}
-        </div>
-      </div>
-    </form>
-  </div>
-
-</div>

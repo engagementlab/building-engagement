@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Engagement Journalism API server
+ * Meetr API server
  * 
  * About page Model
  * @module about
@@ -61,7 +61,9 @@ About.add({
 
 	caseStudiesIntro: { type: Types.Markdown, label: 'Case Studies Intro', required: true, initial: true },
 
-	guidePdf: { type: Types.File,  storage: azureFile, label: 'Guide PDF', required: true, initial: true}
+	guidePdf: { type: Types.File,  storage: azureFile, label: 'Guide PDF', required: true, initial: true},
+
+	newProject: { type: String, label: 'New Project Form Intro', required: true, initial: true}
 
 });
 

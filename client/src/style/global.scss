@@ -4,10 +4,15 @@ $tablet: 768px;
 @import "~bulma/sass/grid/columns";
 @import "~bulma/sass/elements/container";
 
+@import "~bulma/sass/utilities/_all.sass";
+@import "~bulma/sass/components/card.sass";
+
 @import '_variables';
 
 @import '~ngx-owl-carousel-o/lib/styles/scss/owl.carousel';
 @import '~ngx-owl-carousel-o/lib/styles/scss/owl.theme.default';
+
+@import '~js-datepicker/src/datepicker.scss';
 
 @keyframes fade {
   from {
@@ -102,7 +107,9 @@ body {
 }
 
 a {
+  cursor: pointer;
   color: black;
+  text-decoration: underline;
 }
 
 button {
@@ -177,7 +184,7 @@ form {
   justify-content: center;
   align-items: center;
 
-  z-index: 25;
+  z-index: 30;
   top: 0;
   left: 0;
   width: 100%;
@@ -234,27 +241,28 @@ form {
   }
 }
 
-    .fields {
+.fields {
 
-      input,
-      textarea {
-        font-size: 1.3em;
-        border: solid 1px rgba(0, 0, 0, 0.4);
-        padding: 5% 5%;
-        margin: 3% 0;
+  input,
+  textarea,
+  select {
+    font-size: 1.3em;
+    border: solid 1px rgba(0, 0, 0, 0.4);
+    padding: 5% 5%;
+    margin: 3% 0;
 
-        width: 92%;
+    width: 92%;
 
-        @include placeholder {
-          text-transform: capitalize;
-          font-size: 1em;
-        }
-      }
-
-      .note {
-        padding: 4% 0;
-      }
+    @include placeholder {
+      text-transform: capitalize;
+      font-size: 1em;
     }
+  }
+
+  .note {
+    padding: 4% 0;
+  }
+}
 
 .content {
 
@@ -276,6 +284,7 @@ form {
     line-height: 1.5;
   }
 }
+
 #top {
   p {
     @include pxtoem(18, 24);
@@ -360,23 +369,23 @@ form {
   position: relative;
   width: 100%;
 
-  @include pxtoem(100, 200);  
+  @include pxtoem(100, 200);
   font-weight: 900;
 
   paint-order: stroke fill;
   -webkit-text-fill-color: rgba(0, 0, 0, 0);
 
   &:before {
-    
+
     position: absolute;
     display: block;
-    
+
     content: attr(data-text);
 
     -webkit-text-stroke-width: 2px;
     z-index: -2;
     font-size: 1em;
-  
+
   }
 
 }

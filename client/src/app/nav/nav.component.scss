@@ -19,7 +19,7 @@ nav {
 
     position: relative;
     display: flex;
-    z-index: 25;
+    z-index: 99;
 
     &#home {
       ::ng-deep img {
@@ -66,19 +66,22 @@ nav {
 
     display: flex;
     position: relative;
-    z-index: 25;
     min-width: 50px;
 
     justify-content: space-between;
 
+    #profile {
+      @include transition(opacity, .7s, ease-in-out);
+    }
+
     #lines {
       display: block;
       position: relative;
+      z-index: 99;
+
       @include translate(0, .75rem);
 
       cursor: pointer;
-
-      // padding-top: 4%;
 
       @include phones {
         padding-top: 9%;
@@ -142,12 +145,15 @@ nav {
 
     &.open {
 
+      #profile {
+        opacity: 0;
+      }
 
       #lines {
         @include translate(0, 5%);
 
         @include not-phones {
-          @include translate(0, 30%);
+          @include translate(0, 15px);
         }
 
         span {

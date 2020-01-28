@@ -1,6 +1,6 @@
 'use strict';
 /**
- * Engagement Journalism API server
+ * Meetr API server
  * Developed by Engagement Lab, 2019
  * ==============
  * App start
@@ -28,7 +28,9 @@ logFormat = winston.format.combine(
 		const ts = timestamp.slice(0, 19).replace('T', ' ');
 		return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ''}`;
 	}),
-);
+),
+Emails = require('./emails');
+
 global.logger = winston.createLogger({
 	level: 'info',
 	format: logFormat,
@@ -59,9 +61,22 @@ bootstrap.start(
 		app.listen(process.env.PORT);
 
 		var mongoose = require('mongoose');
-		mongoose.connect('mongodb://localhost/engagement-journalism', {useNewUrlParser: true});
+		mongoose.connect('mongodb://localhost/engagement-journalism', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+		
 		var db = mongoose.connection;
 		db.on('error', console.error.bind(console, 'connection error:'));
+
+		// Schedule email reminders (once per day at 6am on prod)
+		let schedule = require('node-schedule');
+		let period = process.env.NODE_ENV.environment === 'production' ? '0 6 * * *' : '* * * * *';
+		schedule.scheduleJob(period, () => {
+
+			Emails().catch(err => {
+				// Print error if any
+				console.error(err);
+			});
+			
+		});
 
 	}
 );

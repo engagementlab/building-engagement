@@ -1,6 +1,6 @@
 {
   "name": "engagement-journalism-server",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "main": "app.js",
   "license": "MIT",
   "description": "",
@@ -12,7 +12,7 @@
     "url": "git+https://github.com/engagementlab/make-foia-work.git"
   },
   "dependencies": {
-    "@engagementlab/el-bootstrapper": "^0.0.6",
+    "@engagementlab/el-bootstrapper": "0.0.7",
     "bluebird": "^3.5.5",
     "cloudinary": "^1.14.0",
     "connect-flash": "^0.1.1",
@@ -21,7 +21,10 @@
     "flat": "^4.1.0",
     "keystone-storage-adapter-azure": "^1.1.0",
     "lodash": "4.17.15",
-    "mongoose": "^5.6.2",
+    "mailgun-js": "^0.22.0",
+    "mongoose": "^5.7.5",
+    "node-fetch": "^2.6.0",
+    "node-schedule": "^1.3.2",
     "validator": "^10.9.0",
     "winston": "^3.2.1"
   }

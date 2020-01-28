@@ -16,6 +16,15 @@ h5 {
   margin: 40px 0 0;
 }
 
+p {
+  @include pxtoem(16, 20);
+  line-height: 2em;
+}
+
+.container {
+  overflow: visible;
+}
+
 #top {
 
   overflow: visible;
@@ -34,11 +43,11 @@ h5 {
   }
 
   ::ng-deep img {
-    
+
     @include not-phones {
       position: absolute;
-    }    
-    
+    }
+
     @include mq($from: tabletPortrait) {
       margin-top: 24%;
       left: -6%;
@@ -63,7 +72,9 @@ h5 {
 #works {
 
   background-color: $pale-salmon-15;
+  
   padding-top: 22%;
+  padding-bottom: 7%;
 
   @include phones {
     margin-top: -20%;
@@ -74,6 +85,49 @@ h5 {
     font-weight: normal;
     margin: 5% 0 18%;
     line-height: 1.8;
+  }
+
+  h3 {
+    @include pxtoem(16, 20);
+  }
+
+  .img {
+    position: absolute;
+    right: 0;
+
+    @include phones {
+      max-width: 200px;
+      @include translate(0%, -40%);
+    }
+    @include mq($from: tabletPortrait) {
+      max-width: 250px;
+      @include translate(0%, 387%);
+    }
+    @include mq($from: tabletPortrait, $and: '(orientation: landscape)') {
+      max-width: 250px;
+      @include translate(0%, 287%);
+    }
+    @include mq($from: 860px, $until: 1024px) {
+      max-width: 295px;
+      @include translate(-25%, 300%);
+    }
+    @include mq($from: 1300px, $until: 1400px) {
+      max-width: 320px;
+      @include translate(25%, 190%);
+    }
+    @include mq($from: 1401px) {
+      max-width: 350px;
+      @include translate(30%, 155%);
+    }
+  }
+
+  .desc {
+    font-size: 2em;
+    font-weight: 500;
+
+    @include phones {
+      font-size: 1.3em;
+    }
   }
 
   .header {
@@ -89,6 +143,10 @@ h5 {
     font-weight: 600;
     text-transform: uppercase;
 
+    @include phones {
+      min-height: 100px;
+    }
+
     div {
       position: absolute;
     }
@@ -100,18 +158,7 @@ h5 {
     .outline {
       &:before {
         -webkit-text-stroke-color: $coral;
-
       }
-    }
-  }
-
-  #step2 {
-    margin-top: 10%;
-    margin-bottom: 10%;
-
-    @include phones {
-      margin-top: 5%;
-      flex-direction: column-reverse;
     }
   }
 }
@@ -119,8 +166,6 @@ h5 {
 #getstarted {
 
   padding: 9% 0;
-
-  text-align: center;
 
   background-image: cdn-image('img/speckled-bg', c_fill, f_auto, w_1440);
   background-size: cover;
@@ -130,12 +175,40 @@ h5 {
   }
 
   h1 {
-    font-family: 'Roboto', sans-serif;
+    @include pxtoem(26, 38);
     font-weight: 500;
   }
 
-  .mono {
-    @include pxtoem(24, 36);
+  a {
+    @include pxtoem(18, 22);
+  }
+
+  .img {
+    position: absolute;
+    left: 0;
+    
+    @include phones {
+      max-width: 190px;
+      @include translate(73%, -18%);
+    }
+    @include mq($from: mobileLg) {
+      max-width: 246px;
+      @include translate(68%, -20%);
+    }
+    @include mq($from: tabletPortrait) {
+      max-width: 350px;
+      @include translate(50%, -44%);
+    }
+    @include mq($from: wide) {
+      max-width: 350px;
+      @include translate(80%, -15%);
+      
+    }
+  }
+
+  #grid {
+    display: flex;
+    align-items: center;
   }
 
 }
@@ -175,14 +248,22 @@ h5 {
 
   // To achieve one item per line, has to be UL in CMS
   ::ng-deep ul {
-    list-style: none;
+    list-style-type: none;
 
     margin: 0;
     padding: 0;
 
     li {
+      margin-bottom: 6pt;
+      padding-left: 6pt;
+
       @include pxtoem(12, 18);
       font-weight: 300;
+
+      &::before {
+        content: "\2013";  // en dash
+        margin-right: 6pt;
+      }
     }
   }
 

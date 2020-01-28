@@ -5,7 +5,7 @@ h4 {
 }
 
 #top {
-  a {
+  a.mono {
     @include pxtoem(14, 18);
   }
 }
@@ -40,6 +40,30 @@ h4 {
     }
   }
 
+}
+
+#reminder {
+  @include pxtoem(14, 18);
+
+  padding: 4%;
+
+  background-color: $camo-green;
+  color: white;
+
+  a {
+    cursor: pointer;
+    text-decoration: underline;
+    color: white;
+
+  }
+}
+
+#reminder-form {
+  display: none;
+
+  button {
+    color: white;
+  }
 }
 
 #view {
@@ -238,6 +262,11 @@ h4 {
       svg {
         max-width: 20px;
       }
+    }
+
+    &#delete {
+      display: block;
+      text-align: right;
     }
   }
 
