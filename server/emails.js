@@ -1,7 +1,7 @@
 'use strict';
 /**
  * Meetr API server
- * Developed by Engagement Lab, 2019
+ * Developed by Engagement Lab, 2019-2020
  * ==============
  * Script for sending out project survey reminder emails
  *
@@ -110,26 +110,29 @@ const SendEmail = async function () {
 
         // Send message batch, and updated affected projects
         mailgun.messages().send(data, async function (error, body) {
-            if (error) {
-                logger.error('Mailgun error: ' + error)
-                throw new Error('Mailgun error: ' + error)
+            try {
+                if (error) 
+                    logger.error('Mailgun error: ' + error)
+
+                logger.info('==> Sent ' + recipientEmails.length + ' reminder(s)');
+
+                // If success, we need to update all affected projects w/ 
+                // new last reminder date
+                await Promise.all(getRes.map(async (project) => {
+                    project.lastReminderDate = new Date(Date.now()).toISOString();
+
+                    // Stop reminder if end date set, and it's today or in past
+                    if(project.reminderEndDate) {
+                        if(project.reminderEndDate <= new Date().getTime())
+                            project.reminderPeriod = null;
+                    }
+
+                    await project.save();
+                })); 
             }
-
-            logger.info('==> Sent ' + recipientEmails.length + ' reminder(s)');
-
-            // If success, we need to update all affected projects w/ 
-            // new last reminder date
-            await Promise.all(getRes.map(async (project) => {
-                project.lastReminderDate = new Date(Date.now()).toISOString();
-
-                // Stop reminder if end date set, and it's today or in past
-                if(project.reminderEndDate) {
-                    if(project.reminderEndDate <= new Date().getTime())
-                        project.reminderPeriod = null;
-                }
-
-                await project.save();
-            }));
+            catch (e) {
+                throw logger.error(e);
+            }
 
         });
     } catch (e) {
