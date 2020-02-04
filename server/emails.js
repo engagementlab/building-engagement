@@ -14,6 +14,13 @@ require('dotenv').load();
 
 const SendEmail = async function () {
 
+    // Hook up mongo
+    const mongoose = require('mongoose');
+    mongoose.connect('mongodb://localhost/engagement-journalism', {useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
+    
+    const db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+
     const Project = require('./models/Project'),
         mailgun = require('mailgun-js')({
             apiKey: process.env.MAILGUN_KEY,
@@ -42,56 +49,63 @@ const SendEmail = async function () {
     }, 'name slug reminderPeriod reminderEmail reminderEndDate lastReminderDate').populate('user');
 
     try {
-        let getRes = await projects.exec();
         let recipientEmails = [];
         let recipientData = {};
+        let getRes;
 
-        getRes.forEach((project, i) => {
+        try {
 
-            // Get time difference from last reminder date and today
-            let dayDelta = new Date().getTime() - new Date(project.lastReminderDate).getTime();
-            // Get delta in days by dividing by milliseconds in one day
-            let daysSince = parseInt(dayDelta / (1000 * 3600 * 24));
+            getRes = await projects.exec();
+            getRes.forEach((project) => {
+                // Get time difference from last reminder date and today
+                let dayDelta = new Date().getTime() - new Date(project.lastReminderDate).getTime();
+                // Get delta in days by dividing by milliseconds in one day
+                let daysSince = parseInt(dayDelta / (1000 * 3600 * 24));
 
-            // Should email be sent?
-            let send = false;
+                // Should email be sent?
+                let send = false;
 
-            switch (project.reminderPeriod) {
-                case 0:
-                    send = daysSince >= 14;
-                    break;
-                case 1:
-                    send = daysSince >= 30;
-                    break;
-                case 2:
-                    send = daysSince >= 60;
-                    break;
-                case 3:
-                    // 'Every day' (non-production/testing only)
-                    send = daysSince >= 1;
-                    break;
-            }
+                switch (project.reminderPeriod) {
+                    case 0:
+                        send = daysSince >= 14;
+                        break;
+                    case 1:
+                        send = daysSince >= 30;
+                        break;
+                    case 2:
+                        send = daysSince >= 60;
+                        break;
+                    case 3:
+                        // 'Every day' (non-production/testing only)
+                        send = daysSince >= 1;
+                        break;
+                }
 
-            // If period not triggered, skip
-            if (!send)
-                return;
+                // If period not triggered, skip
+                if (!send)
+                    return;
 
-            recipientEmails.push(project.reminderEmail);
-            recipientData[project.reminderEmail] = {
-                from: '<noreply@meetr.in>',
-                to: project.reminderEmail,
-                project: project.name,
-                slug: project.slug,
-                name: project.user.name
-            };
+                recipientEmails.push(project.reminderEmail);
+                recipientData[project.reminderEmail] = {
+                    from: '<noreply@meetr.in>',
+                    to: project.reminderEmail,
+                    project: project.name,
+                    slug: project.slug,
+                    name: project.user.name
+                };
 
-            logger.info('=> Reminder for project "' + project.name + '" to ' + project.reminderEmail);
+                logger.info('=> Reminder for project "' + project.name + '" to ' + project.reminderEmail);
 
-        });
+            });
+
+        }
+        catch(e) {
+            logger.error('Mongo error', e);
+        }
 
         // If no recipients, quit
         if (recipientEmails.length === 0)
-            return;
+            process.exit(200);
 
         const subject = (process.env.NODE_ENV !== 'production' ? '(TESTING) ' : '') + 'Meetr reminder for your project "%recipient.project%"',
               body = '<img src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,w_150/v1565109667/engagement-journalism/img/meetr_logo_raster.png" alt="Meetr logo" /><br /><br />' +
@@ -118,26 +132,36 @@ const SendEmail = async function () {
 
                 // If success, we need to update all affected projects w/ 
                 // new last reminder date
-                await Promise.all(getRes.map(async (project) => {
-                    project.lastReminderDate = new Date(Date.now()).toISOString();
+                try {
 
-                    // Stop reminder if end date set, and it's today or in past
-                    if(project.reminderEndDate) {
-                        if(project.reminderEndDate <= new Date().getTime())
-                            project.reminderPeriod = null;
-                    }
+                    await Promise.all(getRes.map(async (project) => {
+                        project.lastReminderDate = new Date(Date.now()).toISOString();
 
-                    await project.save();
-                })); 
+                        // Stop reminder if end date set, and it's today or in past
+                        if(project.reminderEndDate) {
+                            if(project.reminderEndDate <= new Date().getTime())
+                                project.reminderPeriod = null;
+                        }
+
+                        await project.save();
+                    })); 
+
+                }
+                catch (e) {
+                    logger.error('Date update error:', e);
+                }
+    
             }
             catch (e) {
-                throw logger.error(e);
+                logger.error(e);
             }
+
+            process.exit(200);
 
         });
     } catch (e) {
-        throw Error(e);
+        logger.error(e);
     }
 };
 
-module.exports = SendEmail;
+module.exports = SendEmail();
