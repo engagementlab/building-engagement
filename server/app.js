@@ -28,8 +28,7 @@ logFormat = winston.format.combine(
 		const ts = timestamp.slice(0, 19).replace('T', ' ');
 		return `${ts} [${level}]: ${message} ${Object.keys(args).length ? JSON.stringify(args, null, 2) : ''}`;
 	}),
-),
-Emails = require('./emails');
+);
 
 global.logger = winston.createLogger({
 	level: 'info',
@@ -71,12 +70,11 @@ bootstrap.start(
 		let period = process.env.NODE_ENV.environment === 'production' ? '0 6 * * *' : '* * * * *';
 		schedule.scheduleJob(period, () => {
 
-			Emails().catch(err => {
-				// Print error if any
-				console.error(err);
-			});
-			
-		});
+			// Run emails job as fork proc
+			const fork = require('child_process').fork;
+			fork('./emails.js');
 
+		});
+	
 	}
 );
