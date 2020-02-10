@@ -1,10 +1,13 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
-import { AuthService } from '../utils/auth.service';
 
-import { TweenLite, TimelineLite, Circ, Back, Expo } from 'gsap';
+import { TimelineLite, Expo } from 'gsap';
+
+import { environment } from '../../environments/environment';
+
 import { DataService } from '../utils/data.service';
+import { AuthService } from '../utils/auth.service';
 
 @Component({
   selector: 'app-menu',
@@ -14,16 +17,16 @@ import { DataService } from '../utils/data.service';
 export class MenuComponent implements AfterViewInit {
 
   public isAuthenticated: boolean;
+  public showCaseStudies: boolean;
+
   private currentUrl: string;
 
   private tl: TimelineLite;
   
   constructor(private _router: Router, private authService: AuthService, private _dataSvc: DataService) { 
 
-    // Close menu when nav starts
-    _router.events.pipe(filter(e => e instanceof NavigationStart)).subscribe(e => {
-      // this.closeNav();
-    });
+    // Toggle visibility of studies link
+    this.showCaseStudies = environment.main;
   
     // Get nav route when nav ends
     _router.events.pipe(filter(e => e instanceof NavigationEnd)).subscribe(e => {

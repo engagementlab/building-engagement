@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Subject, Observable, throwError, BehaviorSubject, ReplaySubject } from 'rxjs';
 
@@ -49,6 +49,7 @@ export class DataService {
 
     let url = this.baseUrl;
     url += urlParam;
+    url += `?domain=${environment.main ? 'main' : 'city'}`;
 
     return this.http.get(url)
     .pipe(

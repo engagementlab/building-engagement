@@ -5,13 +5,13 @@
         About
       </a>
     </li>
-    <li>
-      <a [class.current]="itemActive('projects')" routerLink="/projects" queryParamsHandling="merge">
+    <li *ngIf="isAuthenticated">
+    <a [class.current]="itemActive('projects')" routerLink="/projects" queryParamsHandling="merge">
         Projects
       </a>
     </li>
-    <li>
-      <a [class.current]="itemActive('about')" routerLink="/studies" queryParamsHandling="merge">
+    <li *ngIf="showCaseStudies">
+      <a [class.current]="itemActive('studies')" routerLink="/studies" queryParamsHandling="merge">
         Case Studies
       </a>
     </li>
