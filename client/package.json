@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm-run-all -l -p browser api",
-    "browser": "ng serve --open --publicHost local.dev.me",
+    "start": "subdomain=$sub npm-run-all -l -p browser api",
+    "browser": "ng serve --open --publicHost local.dev.me --configuration=$subdomain",
     "browser-testing": "ng serve --configuration=dev --port 8000 --host 0.0.0.0 --disableHostCheck true",
     "api": "cd ../server; nodemon",
     "build": "./build.sh production",

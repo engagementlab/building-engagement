@@ -1,6 +1,6 @@
 export const environment = {
   main: true,
-  city: true,
+  city: false,
   qa: true,
   production: true
 };
