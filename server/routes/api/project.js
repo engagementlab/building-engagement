@@ -48,7 +48,8 @@ exports.create = async (req, res) => {
         // Last reminder date is now, by default
         lastReminderDate: new Date(Date.now()).toISOString(),
         user: req.body.userId,
-        slug: displayName
+        slug: displayName,
+        subdomain: req.body.subdomain
     });
 
     // Set end date, if defined
