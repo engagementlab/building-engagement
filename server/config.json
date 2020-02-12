@@ -4,6 +4,7 @@
 	"admin_nav": { 
 		"Home": ["Home", "HomeCity"],						
 		"About": ["About", "AboutCity"],
-		"ActivityIntro": ["ActivityIntro", "ActivityIntroCity"]
+		"ActivityIntro": ["ActivityIntro", "ActivityIntroCity"],
+		"Activity": ["Activity", "ActivityCity"]
 	}
 }

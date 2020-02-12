@@ -1,10 +1,10 @@
 'use strict';
 /**
  * Engagement Journalism API server
- * Activity page Model
- * @module activity
+ * ActivityCity page Model
+ * @module activitycity
  * 
- * @class activity
+ * @class activitycity
  * @author Johnny Richardson
  * 
  * For field docs: http://keystonejs.com/docs/database/
@@ -16,21 +16,21 @@ var keystone = global.keystone;
 var Types = keystone.Field.Types;
 
 /**
- * activity model
+ * activitycity model
  * @constructor
  * See: http://keystonejs.com/docs/database/#lists-options
  */
-var Activity = new keystone.List('Activity', 
+var ActivityCity = new keystone.List('ActivityCity', 
 	{
-		label: 'Activity',
+		label: 'Activity (City)',
 		singular: 'Activity',
 	});
 
 /**
  * Model Fields
- * @main Activity
+ * @main ActivityCity
  */
-Activity.add({
+ActivityCity.add({
 	
 	name: { type: String, required: true, initial: true },
 	order: { type: Types.Select, label: 'Order on Page', options: '1, 2, 3, 4', required: true, initial: true},
@@ -46,6 +46,6 @@ Activity.add({
 /**
  * Model Registration
  */
-Activity.defaultSort = '-order';
-Activity.defaultColumns = 'name, order';
-Activity.register();
+ActivityCity.defaultSort = '-order';
+ActivityCity.defaultColumns = 'name, order';
+ActivityCity.register();

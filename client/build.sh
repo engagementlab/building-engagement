@@ -15,7 +15,7 @@ nvm use;
 
 if [ "$1" == "qa" ]; then
 
-    ng build --configuration=qa-main --prod --index=src/index.qa.html
+    ng build --configuration=qa --prod --index=src/index.qa.html
     ng build --configuration=qa-city --prod --index=src/index.qa.html
 
     mv dist/main/index.qa.html dist/main/index.html
@@ -23,8 +23,16 @@ if [ "$1" == "qa" ]; then
 
 elif [ "$1" == "production" ] || [ "$1" == "prod" ]; then
 
-    ng build --configuration=production-main --prod --index=src/index.prod.html
+    ng build --configuration=production --prod --index=src/index.prod.html
     ng build --configuration=production-city --prod --index=src/index.prod.html
+
+    mv dist/main/index.prod.html dist/main/index.html
+    mv dist/city/index.prod.html dist/city/index.html
+
+elif [ "$1" == "ci" ]; then
+
+    ng build --configuration=ci --prod --index=src/index.prod.html
+    ng build --configuration=ci-city --prod --index=src/index.prod.html
 
     mv dist/main/index.prod.html dist/main/index.html
     mv dist/city/index.prod.html dist/city/index.html
