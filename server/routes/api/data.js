@@ -25,7 +25,7 @@ var buildData = async (type, domain, res) => {
 
     let about = keystone.list(domain === 'city' ? 'AboutCity' : 'About').model;
     let study = keystone.list('CaseStudy').model;
-    let activity = keystone.list(domain === 'city' ? 'Activity' : 'ActivityCity').model;
+    let activity = keystone.list(domain === 'city' ? 'ActivityCity' : 'Activity').model;
     let activityIntro = keystone.list(domain === 'city' ? 'ActivityIntroCity' : 'ActivityIntro').model;
 
     let data = null;
