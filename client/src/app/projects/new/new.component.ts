@@ -69,7 +69,6 @@ export class ProjectNewComponent implements OnInit {
 
     this.projectSubmitted = true;
 
-    console.log(this.newForm)
     if(!this.newForm.valid) return;
 
     let data = {
@@ -78,6 +77,7 @@ export class ProjectNewComponent implements OnInit {
       userId: this._dataSvc.userId.getValue(),
       reminderEmail: this.f['reminderEmail'].value,
       reminderPeriod: this.selectedInterval,
+      subdomain: environment.main ? 'main' : 'city'
     };
     
     if(data.reminderPeriod)

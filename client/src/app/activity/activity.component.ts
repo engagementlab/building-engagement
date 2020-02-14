@@ -5,6 +5,8 @@ import { TweenLite } from 'gsap';
 import { OwlOptions, SlidesOutputData } from 'ngx-owl-carousel-o';
 import { ActivatedRoute } from '@angular/router';
 
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-activity',
   templateUrl: './activity.component.html',
@@ -18,6 +20,8 @@ export class ActivityComponent implements OnInit {
   public projectKey: string;
   public pdfUrl: string;
   
+  public showPdf: boolean;
+  
   customOptions: OwlOptions = {
     mouseDrag: true,
     touchDrag: true,
@@ -27,7 +31,11 @@ export class ActivityComponent implements OnInit {
     items: 1,
     navSpeed: 700
   }
-  constructor(private _dataSvc: DataService, private _route: ActivatedRoute) { }
+
+  constructor(private _dataSvc: DataService, private _route: ActivatedRoute) {
+
+    this.showPdf = environment.main;
+  }
 
   ngOnInit() {   
 
@@ -40,9 +48,11 @@ export class ActivityComponent implements OnInit {
     
     this._dataSvc.getDataForUrl('/api/data/get/activity').subscribe((response: any) => {
 
-      this.pdfUrl = response[0].guidePdf.url;
       this.activities = response[1];
       
+      if(response[0].guidePdf)
+        this.pdfUrl = response[0].guidePdf.url;
+  
     }); 
   }
   

@@ -10,7 +10,7 @@
  */
 const keystone = global.keystone;
 
-var buildData = async (type, res) => {
+var buildData = async (type, domain, res) => {
 
     let homeFields = 'tagline screen1.html talk track visualize why.html what.html -_id';
     let aboutFields = 'intro para1 para2 what.html why.html guidePdf.url -_id';
@@ -20,11 +20,13 @@ var buildData = async (type, res) => {
     let activityFields = 'name intro step1.html step2.html step3.html step4.html step5.html';
     let activityIntroFields = 'instructions.html -_id';
 
-    let home = keystone.list('Home').model;
-    let about = keystone.list('About').model;
+    // Toggle model types based on domain query
+    let home = keystone.list(domain === 'city' ? 'HomeCity' : 'Home').model;
+
+    let about = keystone.list(domain === 'city' ? 'AboutCity' : 'About').model;
     let study = keystone.list('CaseStudy').model;
-    let activity = keystone.list('Activity').model;
-    let activityIntro = keystone.list('ActivityIntro').model;
+    let activity = keystone.list(domain === 'city' ? 'ActivityCity' : 'Activity').model;
+    let activityIntro = keystone.list(domain === 'city' ? 'ActivityIntroCity' : 'ActivityIntro').model;
 
     let data = null;
     let getRes = [];
@@ -81,6 +83,6 @@ var buildData = async (type, res) => {
  */
 exports.get = function (req, res) {
 
-    return buildData(req.params.type, res);
+    return buildData(req.params.type, req.query.domain, res);
 
 }

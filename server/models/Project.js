@@ -37,6 +37,9 @@ var projectSchema = new Schema({
 	},
 	slug: {
 		type: String
+	},
+	subdomain: {
+		type: String
 	}
 });
 

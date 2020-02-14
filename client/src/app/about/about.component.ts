@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../utils/data.service';
 
+import { environment } from '../../environments/environment';
+
 @Component({
   selector: 'app-about',
   templateUrl: './about.component.html',
@@ -11,7 +13,13 @@ export class AboutComponent implements OnInit {
   public content: any;
   public hasContent: boolean;
 
-  constructor(private _dataSvc: DataService) { }
+  public showPdf: boolean;
+
+  constructor(private _dataSvc: DataService) {
+
+    this.showPdf = environment.main;
+
+  }
 
   ngOnInit() {
     

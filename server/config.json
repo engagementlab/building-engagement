@@ -1,4 +1,10 @@
 {
 	"name": "Meetr API server",
-	"database": "engagement-journalism"
+	"database": "engagement-journalism",
+	"admin_nav": { 
+		"Home": ["Home", "HomeCity"],						
+		"About": ["About", "AboutCity"],
+		"ActivityIntro": ["ActivityIntro", "ActivityIntroCity"],
+		"Activity": ["Activity", "ActivityCity"]
+	}
 }

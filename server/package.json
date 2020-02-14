@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "",
   "scripts": {
-    "start": "source ~/.nvm/nvm.sh; nvm use; nodemon"
+    "start": "source ~/.nvm/nvm.sh; nvm use; nodemon --inspect app.js"
   },
   "repository": {
     "type": "git",
