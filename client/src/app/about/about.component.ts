@@ -13,11 +13,11 @@ export class AboutComponent implements OnInit {
   public content: any;
   public hasContent: boolean;
 
-  public showPdf: boolean;
+  public isCityBuild: boolean;
 
   constructor(private _dataSvc: DataService) {
 
-    this.showPdf = environment.main;
+    this.isCityBuild = environment.city;
 
   }
 
