@@ -65,9 +65,9 @@ bootstrap.start(
 		var db = mongoose.connection;
 		db.on('error', console.error.bind(console, 'connection error:'));
 
-		// Schedule email reminders (once per day at 6am on prod)
+		// Schedule email reminders (once per day at 6am)
 		let schedule = require('node-schedule');
-		let period = process.env.NODE_ENV.environment === 'production' ? '0 6 * * *' : '* * * * *';
+		let period = '0 6 * * *';
 		schedule.scheduleJob(period, () => {
 
 			// Run emails job as fork proc
