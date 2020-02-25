@@ -8,9 +8,7 @@
 
     <p id="none" *ngIf="noProjects">You currently have no projects.</p>
 
-    <h3 *ngIf="noProjects">Get started by naming and briefly describing a project you are planning or currently working on that involves community engagement. Creating a Project will allow you to track your progress on that individual project.  You can create more than one Project.</h3>
-
-    <div class="column is-full" *ngIf="explanationTxt">
+    <div class="column is-full" *ngIf="explanationTxt && noProjects">
       <p>
         {{explanationTxt}}
       </p>
