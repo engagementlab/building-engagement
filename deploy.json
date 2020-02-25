@@ -21,7 +21,7 @@
 
     "staging" : {
       "user": "node",
-      "host": "199.94.80.19",
+      "host": "159.203.174.12",
       "repo": "git@github.com:engagementlab/meetr.git",
       "ref": "origin/master",
       "path": "/srv/meetr",
