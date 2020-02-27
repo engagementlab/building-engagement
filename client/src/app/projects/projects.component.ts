@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 export class ProjectsComponent implements OnInit {
 
   public userName: string;
+  public explanationTxt: string;
 
   public profile: any;
   public projects: any[]
@@ -47,7 +48,8 @@ export class ProjectsComponent implements OnInit {
 
     this._dataSvc.getDataForUrl('/api/project/get/' + userId).subscribe((response: any) => {
 
-      this.projects = response;
+      this.projects = response.projects;
+      this.explanationTxt = response.text.newProject;
       this.hasContent = true;
       this.noProjects = !this.projects || this.projects.length === 0;
 

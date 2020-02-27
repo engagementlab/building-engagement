@@ -98,7 +98,7 @@
       </div>
 
       <div class="column is-full-mobile is-full-tablet is-4-desktop">
-        <h4 class="no-margin">What is <strong>engaged journalism</strong>?</h4>
+        <h4 class="no-margin" *ngIf="!isCityBuild">What is <strong>engaged journalism</strong>?</h4>
         <a class="mono uppercase hidden-mobile" routerLink="/about">
           Learn more
         </a>

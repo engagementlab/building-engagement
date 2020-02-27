@@ -10,6 +10,7 @@
  */
 const Project = require('../../models/Project'),
       Progress = require('../../models/Progress'),
+      About = global.keystone.list('About').model,
       PDF = global.keystone.list('PDF').model,
       _ = require('lodash');
 
@@ -88,10 +89,12 @@ exports.delete = async (req, res) => {
 exports.getAll = async (req, res) => {
 
     let userProjects = Project.find({user: req.params.userId}, 'name explanation slug -_id');
+    let projectTxt = About.findOne({}, 'newProject -_id');
 
     try {
-        let getRes = await userProjects.exec();
-        res.json(getRes);
+        let getResProjects = await userProjects.exec();
+        let getResTxt = await projectTxt.exec();
+        res.json({projects: getResProjects, text: getResTxt});
     }
     catch(e) {
         res.status(500).json({e});

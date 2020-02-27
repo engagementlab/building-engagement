@@ -11,7 +11,7 @@
   </section>
 </div>
 
-<div class="download" *ngIf="hasContent && showPdf">
+<div class="download" *ngIf="hasContent && !isCityBuild">
   <div class="container">
     <section class="section columns column is-multiline is-centered is-vcentered">
       <div class="column is-one-third hidden-tablet-plus">
@@ -39,14 +39,16 @@
   <div class="container">
     <section class="section columns column is-multiline what">
       <div class="column is-one-third">
-        <h2>What is engaged journalism?</h2>
+        <h2 *ngIf="!isCityBuild">What is engaged journalism?</h2>
+        <h2 *ngIf="isCityBuild">What is civic innovation?</h2>
       </div>
       <div class="column info-list" [innerHtml]="content.what.html"></div>
     </section>
 
     <section class="section columns column is-multiline why">
       <div class="column is-one-third">
-        <h2>Why do engaged journalism?</h2>
+        <h2 *ngIf="!isCityBuild">Why do engaged journalism?</h2>
+        <h2 *ngIf="isCityBuild">Why do civic innovation?</h2>
       </div>
       <div class="column info-list" [innerHtml]="content.why.html"></div>
     </section>
