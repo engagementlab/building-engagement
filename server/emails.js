@@ -99,10 +99,10 @@ const SendEmail = async function () {
                 bodyTxt = bodyTxt.replace('[project]', project.name).replace('[name]', project.user.name);
 
                 // Create unique subject
-                const subjectPrefix = process.env.NODE_ENV !== 'production' ? '(TESTING)' : '';
+                const subjectPrefix = process.env.NODE_ENV !== 'production' ? '(TESTING) ' : '';
                 let subjectTxt = project.subdomain === 'city' ? getContentRes.subjectCity : getContentRes.subject;
                 subjectTxt = subjectTxt.replace('[project]', project.name).replace('[name]', project.user.name);
-                subjectTxt = `${subjectPrefix} ${subjectTxt}`;
+                subjectTxt = `${subjectPrefix}${subjectTxt}`;
                 
                 recipientEmails.push(project.reminderEmail);
                 recipientData[project.reminderEmail] = {
