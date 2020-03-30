@@ -27,6 +27,7 @@ var buildData = async (type, domain, res) => {
     let study = keystone.list('CaseStudy').model;
     let activity = keystone.list(domain === 'city' ? 'ActivityCity' : 'Activity').model;
     let activityIntro = keystone.list(domain === 'city' ? 'ActivityIntroCity' : 'ActivityIntro').model;
+    let email = keystone.list('Email').model;
 
     let data = null;
     let getRes = [];
@@ -55,6 +56,11 @@ var buildData = async (type, domain, res) => {
     else if (type === 'new') {
         // Get new project intro txt
         data = about.findOne({}, 'newProject -_id');
+    }
+    else if (type === 'email') {
+        data = email.findOne({
+            name: 'Reminder Email'
+        }, 'subject body.html subjectCity bodyCity.html _-id');
     }
     else {
 
