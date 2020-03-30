@@ -46,8 +46,11 @@ const SendEmail = async function () {
     logger.info('----' + new Date() + '----');
 
     // Get all projects where reminder interval not null, and populate user for each
-    const projects = Project.find({user: '5d49a3db200024bd9fbd3efa'
-    }, 'name slug subdomain reminderPeriod reminderEmail reminderEndDate lastReminderDate').populate('user');
+    const projects = Project.find({
+        reminderPeriod: {
+            $ne: null
+        }
+    }, 'name slug reminderPeriod reminderEmail reminderEndDate lastReminderDate').populate('user');
 
     // Get email subject/body content from running API (which has CMS data)
     const emailContent = await axios.get(`http://localhost:${process.env.PORT}/api/data/get/email`);
@@ -86,12 +89,11 @@ const SendEmail = async function () {
                         send = daysSince >= 1;
                         break;
                 }
-// //////////////////////////////
-                send = true
                
                 // If period not triggered, skip 
                 if (!send)
                     return;
+
                 // Create unique body text
                 let bodyTxt =  emailBodyLogo + (project.subdomain === 'city' ? getContentRes.bodyCity.html : getContentRes.body.html);
                 bodyTxt = bodyTxt.replace('[project]', project.name).replace('[name]', project.user.name);
@@ -109,7 +111,6 @@ const SendEmail = async function () {
                     subject: subjectTxt,
                     body: bodyTxt
                 };
-                console.log(recipientData)
 
                 logger.info('=> Reminder for project "' + project.name + '" to ' + project.reminderEmail);
 
@@ -124,8 +125,6 @@ const SendEmail = async function () {
         if (recipientEmails.length === 0)
             process.exit(200);
 
-            // return
-        
         const data = {
             'recipient-variables': recipientData,
             from: 'Meetr <noreply@meetr.in>',
