@@ -11,8 +11,12 @@
  */
 
 require('dotenv').load();
+const axios = require('axios');
 
 const SendEmail = async function () {
+
+    const emailBodyLogo = 
+    `<img src="${process.env.EMAIL_LOGO}" alt="Meetr logo" /><br /><br />`;
 
     // Hook up mongo
     const mongoose = require('mongoose');
@@ -42,20 +46,22 @@ const SendEmail = async function () {
     logger.info('----' + new Date() + '----');
 
     // Get all projects where reminder interval not null, and populate user for each
-    let projects = Project.find({
-        reminderPeriod: {
-            $ne: null
-        }
-    }, 'name slug reminderPeriod reminderEmail reminderEndDate lastReminderDate').populate('user');
+    const projects = Project.find({user: '5d49a3db200024bd9fbd3efa'
+    }, 'name slug subdomain reminderPeriod reminderEmail reminderEndDate lastReminderDate').populate('user');
 
+    // Get email subject/body content from running API (which has CMS data)
+    const emailContent = await axios.get(`http://localhost:${process.env.PORT}/api/data/get/email`);
+    
     try {
         let recipientEmails = [];
         let recipientData = {};
         let getRes;
-
+        let getContentRes = emailContent.data[0];
+        
         try {
-
+            
             getRes = await projects.exec();
+            
             getRes.forEach((project) => {
                 // Get time difference from last reminder date and today
                 let dayDelta = new Date().getTime() - new Date(project.lastReminderDate).getTime();
@@ -80,19 +86,30 @@ const SendEmail = async function () {
                         send = daysSince >= 1;
                         break;
                 }
-
-                // If period not triggered, skip
+// //////////////////////////////
+                send = true
+               
+                // If period not triggered, skip 
                 if (!send)
                     return;
+                // Create unique body text
+                let bodyTxt =  emailBodyLogo + (project.subdomain === 'city' ? getContentRes.bodyCity.html : getContentRes.body.html);
+                bodyTxt = bodyTxt.replace('[project]', project.name).replace('[name]', project.user.name);
 
+                // Create unique subject
+                const subjectPrefix = process.env.NODE_ENV !== 'production' ? '(TESTING)' : '';
+                let subjectTxt = project.subdomain === 'city' ? getContentRes.subjectCity : getContentRes.subject;
+                subjectTxt = subjectTxt.replace('[project]', project.name).replace('[name]', project.user.name);
+                subjectTxt = `${subjectPrefix} ${subjectTxt}`;
+                
                 recipientEmails.push(project.reminderEmail);
                 recipientData[project.reminderEmail] = {
                     from: '<noreply@meetr.in>',
                     to: project.reminderEmail,
-                    project: project.name,
-                    slug: project.slug,
-                    name: project.user.name
+                    subject: subjectTxt,
+                    body: bodyTxt
                 };
+                console.log(recipientData)
 
                 logger.info('=> Reminder for project "' + project.name + '" to ' + project.reminderEmail);
 
@@ -107,19 +124,14 @@ const SendEmail = async function () {
         if (recipientEmails.length === 0)
             process.exit(200);
 
-        const subject = (process.env.NODE_ENV !== 'production' ? '(TESTING) ' : '') + 'Meetr reminder for your project "%recipient.project%"',
-              body = '<img src="https://res.cloudinary.com/engagement-lab-home/image/upload/c_scale,w_150/v1565109667/engagement-journalism/img/meetr_logo_raster.png" alt="Meetr logo" /><br /><br />' +
-                    'Hi %recipient.name%,' +
-                    '<p>How’s your engaged journalism project going? We want to keep helping you measure its value. Please remember to track the progress of your project, "%recipient.project%” on Meetr.<br /><br />' +
-                    'Talk it out and track your progress by visiting <a href="https://meetr.in">Meetr</a>.</p>' +
-                    'The Meetr Team';
+            // return
         
         const data = {
             'recipient-variables': recipientData,
             from: 'Meetr <noreply@meetr.in>',
             to: recipientEmails,
-            subject: subject,
-            html: body
+            subject: '%recipient.subject%',
+            html: '%recipient.body%'
         };
 
         // Send message batch, and updated affected projects
