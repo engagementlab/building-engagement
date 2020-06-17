@@ -97,6 +97,7 @@
                       <ng-container *ngIf="item.user.lastLogin; else noLogin">
                         {{item.user.lastLogin}}
                       </ng-container>
+                      {{item.lastetSurveyDate}}
                       <ng-template #noLogin>
                         No data
                       </ng-template></p>

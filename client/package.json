@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "subdomain=$sub npm-run-all -l -p browser api",
-    "browser": "ng serve --open --publicHost local.dev.me --configuration=$subdomain",
+    "browser": "ng serve --open --publicHost dev.local --configuration=$subdomain",
     "browser-testing": "ng serve --configuration=dev --port 8000 --host 0.0.0.0 --disableHostCheck true",
     "api": "cd ../server; nodemon --inspect",
     "build": "./build.sh production",
@@ -17,10 +17,12 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.0.3",
+    "@angular/cdk": "~8.2.3",
     "@angular/common": "^8.0.3",
     "@angular/compiler": "^8.0.3",
     "@angular/core": "^8.0.3",
     "@angular/forms": "^8.0.3",
+    "@angular/material": "^8.2.3",
     "@angular/platform-browser": "^8.0.3",
     "@angular/platform-browser-dynamic": "^8.0.3",
     "@angular/router": "^8.0.3",
