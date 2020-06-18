@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "ng": "ng",
     "start": "subdomain=$sub npm-run-all -l -p browser api",
@@ -17,7 +17,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "^8.0.3",
-    "@angular/cdk": "^8.2.3",
+    "@angular/cdk": "~8.2.3",
     "@angular/common": "^8.0.3",
     "@angular/compiler": "^8.0.3",
     "@angular/core": "^8.0.3",
@@ -52,7 +52,7 @@
     "zone.js": "~0.9.1"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.803.24",
+    "@angular-devkit/build-angular": "^0.803.25",
     "@angular/cli": "^8.0.6",
     "@angular/compiler-cli": "^8.0.3",
     "@angular/language-service": "^8.0.3",

@@ -36,7 +36,7 @@
 
         <ng-container matColumnDef="user.name">
           <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-          <td mat-cell *matCellDef="let item"> {{ item.user.name }} </td>
+          <td mat-cell *matCellDef="let item" [class.none]="!item.projects || item.projects.length === 0"> {{ item.user.name }} </td>
         </ng-container>
         <ng-container matColumnDef="user.email">
           <th mat-header-cell *matHeaderCellDef> Email </th>
@@ -81,22 +81,20 @@
         <tr (click)="viewProjects(row.projects)" mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
       </table>
+      <mat-paginator [pageSizeOptions]="[10, 20, 50, 100]"></mat-paginator>
+
       <ng-template #projectsDialog id="projects-modal" let-data>
-        <div id="modal" class="columns is-mobile">
+        <mat-dialog-content>
+          <h2 class="no-bottom-space">View Projects</h2>
 
-          <mat-dialog-content>
-            <h2 class="no-bottom-space column is-7-mobile is-9-tablet">View Projects</h2>
+          <mat-list>
+            <mat-list-item *ngFor="let project of data">
+              <a (click)="closeProjects()" routerLink="/admin/{{project._id}}">{{project.name}}</a>
+              <mat-divider></mat-divider>
+            </mat-list-item>
+          </mat-list>
 
-            <mat-list>
-              <mat-list-item *ngFor="let project of data">
-                <a (click)="closeProjects()" routerLink="/admin/{{project._id}}">{{project.name}}</a>
-                <mat-divider></mat-divider>
-              </mat-list-item>
-            </mat-list>
-
-          </mat-dialog-content>
-
-        </div>
+        </mat-dialog-content>
       </ng-template>
 
     </div>
