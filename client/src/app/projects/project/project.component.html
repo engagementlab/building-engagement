@@ -29,15 +29,16 @@
           <span *ngIf="reminderSet && reminderNextDate">
             <span *ngIf="reminderEndDate">
               <ng-container *ngIf="reminderOutdated; else reminderInFuture">
-                Reminders ended on {{reminderEndDate | date: 'MM/dd/yyyy'}}. (<a (click)="openReminder()">Set new reminder</a>)
-              </ng-container >
-              
+                Reminders ended on {{reminderEndDate | date: 'MM/dd/yyyy'}}. <br />
+                (<a (click)="openReminder()">Set new reminder</a>)
+              </ng-container>
+
               <ng-template #reminderInFuture>
                 Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}}.<br />
                 Reminders will end on {{reminderEndDate | date: 'MM/dd/yyyy'}}.
-            (<a (click)="promptCancelReminder()">Cancel
-              reminders</a>)
-              <br />
+                (<a (click)="promptCancelReminder()">Cancel
+                  reminders</a>)
+                <br />
               </ng-template>
             </span>
           </span>
