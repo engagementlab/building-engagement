@@ -72,7 +72,7 @@ export class AdminProjectComponent implements OnInit {
         this._dataSvc.getDataForUrl('/api/admin/get/project/'+params['projectId']).subscribe((response: any) => {
 
           this.project = response.project;
-          this.projectDbId = response.projectId;
+          this.projectDbId = response.project._id;
           this.progress = response.progress;
           this.hasContent = true;
 
@@ -313,7 +313,7 @@ export class AdminProjectComponent implements OnInit {
 
           });
 
-          doc.save('results_' + this.project.slug + '_' + dt + '.pdf');
+          doc.save('results-ADMIN_' + this.project.name + '_' + dt + '.pdf');
 
         });
 
