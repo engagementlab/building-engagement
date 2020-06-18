@@ -8,7 +8,7 @@
 
       <div id="prompt" class="columns is-multiline is-mobile" *ngIf="showPrompt">
         <div class="column is-full-mobile is-9-tablet">
-          It’s been 30 days since your last entry. Want to track your progress?
+          It’s been 30 days or more since your last entry. Want to track your progress?
         </div>
         <div class="column">
           <a routerLink="/projects/{{project.slug}}/track" class="mono">yes</a>
@@ -27,12 +27,19 @@
 
         <div id="reminder">
           <span *ngIf="reminderSet && reminderNextDate">
-            Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}}.<br/>
             <span *ngIf="reminderEndDate">
-              Reminders will end on {{reminderEndDate | date: 'MM/dd/yyyy'}}.<br />
-            </span> 
+              <ng-container *ngIf="reminderOutdated; else reminderInFuture">
+                Reminders ended on {{reminderEndDate | date: 'MM/dd/yyyy'}}. (<a (click)="openReminder()">Set new reminder</a>)
+              </ng-container >
+              
+              <ng-template #reminderInFuture>
+                Next reminder date: {{reminderNextDate | date: 'MM/dd/yyyy'}}.<br />
+                Reminders will end on {{reminderEndDate | date: 'MM/dd/yyyy'}}.
             (<a (click)="promptCancelReminder()">Cancel
               reminders</a>)
+              <br />
+              </ng-template>
+            </span>
           </span>
           <span *ngIf="!reminderSet">
             You currently have no reminder set. (<a (click)="openReminder()">Set reminder</a>)
@@ -47,12 +54,12 @@
             </select>
 
             <br />
-            
-            <input class="enddate" type="datetime" placeholder="End date (optional)" formControlName="reminderEndDate" 
-            [class.hidden]="reminderForm.controls.reminderInterval.value === ''" />
-            
+
+            <input class="enddate" type="datetime" placeholder="End date (optional)" formControlName="reminderEndDate"
+              [class.hidden]="reminderForm.controls.reminderInterval.value === ''" />
+
             <br />
-            
+
             <input formControlName="reminderEmail" id="email" type="email" placeholder="Reminder Email" required
               *ngIf="reminderForm.controls.reminderInterval.value !== ''" />
             <div *ngIf="reminderSubmitted && reminderForm.controls.reminderEmail.invalid">

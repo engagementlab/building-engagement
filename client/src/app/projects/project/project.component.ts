@@ -29,7 +29,7 @@ export class ProjectComponent implements OnInit {
   public projectDbId: string;
   public errorMsg: string;
   public reminderFirstDate: string;
-  public reminderEndDate: string;
+  public reminderEndDate: number;
   
   public progress: any[];
   public reminderIntervals: any = ['Every two weeks', 'Once a month', 'Every other month'];
@@ -39,6 +39,7 @@ export class ProjectComponent implements OnInit {
   public noProgress: boolean;
   public reminderSubmitted: boolean;
   public reminderSet: boolean;
+  public reminderOutdated: boolean;
   public showPrompt: boolean;
   public showTestReminderInterval: boolean;
 
@@ -118,6 +119,9 @@ export class ProjectComponent implements OnInit {
 
           this.reminderSet = true;
           this.reminderEndDate = this.project.reminderEndDate;
+
+          // Was the end date before today?
+          this.reminderOutdated = Date.parse(`${this.reminderEndDate}`) < Date.now();
 
           this.calcReminderDate(this.project.lastReminderDate, this.project.reminderPeriod);
 
