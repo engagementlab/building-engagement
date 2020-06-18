@@ -1,10 +1,11 @@
 import { Component, OnInit, ViewChild, Inject, TemplateRef } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { MatDialog } from '@angular/material/dialog';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { DataService } from '../utils/data.service';
 
@@ -34,6 +35,7 @@ export class AdminComponent implements OnInit {
   public dataSource;
 
   @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild('projectsDialog', {static: false}) projectsDialog: TemplateRef<any>
 
   constructor(
@@ -67,18 +69,19 @@ export class AdminComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource(response);
         this.hasContent = true;
-
+        
         this.dataSource.sortingDataAccessor = (item, property) => {
-
+          
           switch(property) {
             case 'user.name': return item.user.name;
             case 'user.lastLogin': return !item.user.lastLogin ? null : new Date(item.user.lastLogin);
             case 'latestSurveyDate': return !item.latestSurveyDate ? null : new Date(item.latestSurveyDate);
             default: return item.user[property];
           }
-        
+          
         };          
         setTimeout(() => {
+          this.dataSource.paginator = this.paginator;
           this.dataSource.sort = this.sort;
         }, 100);
 
