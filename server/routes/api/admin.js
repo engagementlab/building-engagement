@@ -19,7 +19,6 @@ exports.users = async (req, res) => {
 
     let usersFind = AppUser.find({}, 'name email lastLogin');
 
-
     try {
         let userRes = await usersFind.exec();
         await Promise.all(userRes.map(async (user) => {
@@ -57,7 +56,11 @@ exports.users = async (req, res) => {
             });
 
         })).then(results => {
-            res.status(200).send(results)
+            // Sort results by user most recent survey date
+            const sorted = results.sort((a, b) => {
+                return new Date(b.latestSurveyDate) - new Date(a.latestSurveyDate);
+            });
+            res.status(200).send(sorted);
         });
     } catch (e) {
         console.error(e);
