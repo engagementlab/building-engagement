@@ -356,13 +356,17 @@ export class AdminProjectComponent implements OnInit {
       // Create row per progress
       _.each(this.progress, (p: any, i: number) => {
 
-        progress.push({
+        let columns = {
           Date: dateformat(p.date, 'mm/dd/yyyy'),
           Note: p.note,
-          Responses: allResponses[i].responses.join(','),
-          SumX: p.sumX / 2,
-          SumY: p.sumY / 2,
+        }
+        allResponses[i].responses.forEach((r: any, ir: number) => {
+          columns[`Response ${ir+1}`] = r;
         });
+
+        columns['Sum X'] = p.sumX / 2;
+        columns['Sum Y'] = p.sumY / 2;
+        progress.push(columns);
 
       });
 
