@@ -5,7 +5,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -89,12 +91,14 @@ export const config: CloudinaryConfiguration = cloudinaryConfiguration;
     CloudinaryModule.forRoot(cloudinary, config),
     CarouselModule,
     MatDialogModule,
-    MatTableModule,
-    MatSortModule,
     MatDividerModule,
+    MatIconModule,
     MatListModule,
-    MatSnackBarModule,
+    MatMenuModule,
     MatPaginatorModule,
+    MatSortModule,
+    MatSnackBarModule,
+    MatTableModule,
   ],
   providers: [DataService, HttpClient],
   bootstrap: [AppComponent]
