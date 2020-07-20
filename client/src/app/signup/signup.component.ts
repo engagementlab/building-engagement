@@ -7,7 +7,6 @@ import { DataService } from '../utils/data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PasswordMeter } from 'password-meter';
-import { debug } from 'console';
 
 @Component({
   selector: 'app-signup',
