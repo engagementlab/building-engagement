@@ -3,6 +3,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -79,7 +90,17 @@ export const config: CloudinaryConfiguration = cloudinaryConfiguration;
     ReactiveFormsModule,
     HttpClientModule,
     CloudinaryModule.forRoot(cloudinary, config),
-    CarouselModule
+    CarouselModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatDividerModule,
+    MatIconModule,
+    MatListModule,
+    MatMenuModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatSnackBarModule,
+    MatTableModule,
   ],
   providers: [DataService, HttpClient],
   bootstrap: [AppComponent]

@@ -44,14 +44,22 @@
     </div>
   </div>
 
+  <mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="exportPdf()">PDF</button>
+    <button mat-menu-item (click)="exportCsv()">CSV</button>
+    <button mat-menu-item (click)="export()">PNG (Graph)</button>
+  </mat-menu>
+  
+  <button mat-raised-button [matMenuTriggerFor]="appMenu">
+    Export Project
+  </button>
+
   <!-- Progress canvas -->
   <div class="column is-full" *ngIf="progress && progress.length > 0">
 
     <div class="center">
       <canvas #canvasElement id="canvas" height="680" width="680"></canvas>
     </div>
-
-    <button (click)="export()">Export Graph</button>
 
   </div>
 
