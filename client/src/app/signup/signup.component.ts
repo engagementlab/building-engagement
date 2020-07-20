@@ -6,6 +6,9 @@ import { AuthService } from '../utils/auth.service';
 import { DataService } from '../utils/data.service';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { PasswordMeter } from 'password-meter';
+import { debug } from 'console';
+
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
@@ -14,6 +17,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class SignupSigninComponent implements OnInit {
 
   public errorMsg: string;
+  public passwordErrors: string | string[];
 
   public alreadyExists: boolean;
   public isAuthenticated: boolean;
@@ -22,6 +26,7 @@ export class SignupSigninComponent implements OnInit {
   public signUpSubmitted: boolean;
   public signInSubmitted: boolean;
   public showForgot: boolean = true;
+
 
   private sendTo: string;
 
@@ -38,7 +43,7 @@ export class SignupSigninComponent implements OnInit {
     this.signupForm = this._formBuilder.group({
       'name': ['', Validators.required],
       'email': ['', [Validators.required, Validators.email]],
-      'password': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$^+=!*()@%&]).{8,}')]]
+      'password': ['', [Validators.required, Validators.pattern('^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[#$^+=!*()@%&]).{8,}')]]
     });
     this.signinForm = this._formBuilder.group({
       'email': ['', [Validators.required, Validators.email]],
@@ -121,6 +126,7 @@ export class SignupSigninComponent implements OnInit {
 
     // stop here if form is invalid
     if (this.signupForm.invalid) {
+      debugger
       return;
     }
 
@@ -218,6 +224,34 @@ export class SignupSigninComponent implements OnInit {
   hideForgotMsg(event) {
     document.getElementById('forgot-msg').innerText = '';
     this.showForgot = true;
+  }
+
+  // Tell user about errors for password
+  passwordKeyUp() {
+
+    this.passwordErrors = new PasswordMeter({
+      minLength: {
+        value: 8,
+        message: 'Be at least 8 characters in length'
+      },
+      uppercaseLettersMinLength: {
+        value: 1,
+        message: 'Contain at least one uppercase letter'
+      },
+      lowercaseLettersMinLength: {
+        value: 1,
+        message: 'Contain at least one lowercase letter'
+      },
+      numbersMinLength: {
+        value: 1,
+        message: 'Contain at least one number'
+      },
+      symbolsMinLength: {
+        value: 1,
+        message: 'Contain one or more of a special character, e.g. # or &'
+      },
+      uniqueLettersMinLength: 0,
+    }).getResult(this.suForm['password'].value).errors;
   }
 
   // convenience getter for easy access to form fields
